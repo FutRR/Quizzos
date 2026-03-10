@@ -39,5 +39,36 @@ namespace MonAPIDotNet.Controllers
             }
             return Ok(users);
         }
+
+        // GET /api/user/me
+
+        /// <summary>
+        /// Récupère le profil de l'utilisateur actuellement connecté.
+        /// </summary>
+        /// <param mae="userDto">Le profil de l'utilisateur actuellement connecté.</param>  
+        /// <returns>Le profil de l'utilisateur actuellement connecté.</returns>
+        /// <response code="200">Le profil de l'utilisateur actuellement connecté.</response>
+        /// <response code="401">Non autorisé. L'utilisateur n'est pas authentifié.</response>
+        /// <response code="404">Non trouvé. Le profil de l'utilisateur n'existe pas.</response>
+        [HttpGet("me")]
+        [Authorize]
+        [ProducesResponseType(typeof(UserProfileDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<IActionResult> GetMyProfile()
+        {
+            var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("Invalid token.");
+            }
+            var userProfile = await _userService.GetUserByIdAsync(userId);
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+            return Ok(userProfile);
+        }
     }
 }

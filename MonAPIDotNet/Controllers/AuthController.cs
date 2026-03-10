@@ -76,7 +76,11 @@ namespace MonAPIDotNet.Controllers
         {
             var user = new ApplicationUser
             {
-                UserName = request.Username
+                UserName = request.Username,
+                UserProfile = new UserProfile
+                {
+                    CreatedAt = DateTime.UtcNow
+                }
             };
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
