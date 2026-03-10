@@ -7,6 +7,7 @@ namespace MonAPIDotNet.Data
     {
         public DbSet<AuthorizedApplication> AuthorizedApplications { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
         }

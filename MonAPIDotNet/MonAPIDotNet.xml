@@ -4,6 +4,14 @@
         <name>MonAPIDotNet</name>
     </assembly>
     <members>
+        <member name="M:MonAPIDotNet.Controllers.UserController.GetAllUsers">
+            <summary>
+            Récupère la liste de tous les utilisateurs avec leurs profils publics.
+            </summary>
+            <returns>Tous les utilisateurs avec leurs profils publics.</returns>
+            <response code="200">Tous les utilisateurs avec leurs profils publics.</response>
+            
+        </member>
         <member name="T:MonAPIDotNet.Migrations.Init">
             <inheritdoc />
         </member>
@@ -14,6 +22,18 @@
             <inheritdoc />
         </member>
         <member name="M:MonAPIDotNet.Migrations.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MonAPIDotNet.Migrations.AddUserProfile">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddUserProfile.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddUserProfile.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddUserProfile.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>
