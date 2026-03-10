@@ -18,7 +18,9 @@ namespace MonAPIDotNet
 
             // Add services to the container.
             builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MaBase")));
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<MyDbContext>();
+            builder.Services.AddIdentityCore<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<MyDbContext>();
             builder.Services.AddScoped<JwtService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
@@ -29,27 +31,35 @@ namespace MonAPIDotNet
             })
             .AddJwtBearer(options => 
             {
+                options.MapInboundClaims = false;
+
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    RequireExpirationTime = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new RsaSecurityKey(RsaKeyProvider.GetPrivateKey())
+                };
+
                 options.Events = new JwtBearerEvents
                 {
-                    OnMessageReceived = context =>
+                    OnMessageReceived = async context =>
                     {
                         var jwtService = context.HttpContext.RequestServices.GetRequiredService<JwtService>();
                         var validAudiences = jwtService.GetValidAudience();
 
-                        context.Token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
+                        var logger = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtDebug");
+                        logger.LogInformation("Valid audiences from DB: [{Audiences}]", string.Join(", ", validAudiences));
 
-                        options.TokenValidationParameters = new TokenValidationParameters()
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
-                            RequireExpirationTime = true,
-                            ValidIssuer = builder.Configuration["JWT:Issuer"],
-                            ValidAudiences = validAudiences,
-                            IssuerSigningKey = new RsaSecurityKey(RsaKeyProvider.GetPrivateKey())
-                        };
-
+                        context.Options.TokenValidationParameters.ValidAudiences = validAudiences;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        var logger = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtDebug");
+                        logger.LogError(context.Exception, "JWT Authentication failed");
                         return Task.CompletedTask;
                     }
                 };  

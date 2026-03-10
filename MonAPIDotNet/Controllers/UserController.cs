@@ -58,12 +58,12 @@ namespace MonAPIDotNet.Controllers
 
         public async Task<IActionResult> GetMyProfile()
         {
-            var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-            if (string.IsNullOrEmpty(userId))
+            var username = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            if (string.IsNullOrEmpty(username))
             {
                 return Unauthorized("Invalid token.");
             }
-            var userProfile = await _userService.GetUserByIdAsync(userId);
+            var userProfile = await _userService.GetUserByUsernameAsync(username);
             if (userProfile == null)
             {
                 return NotFound();
