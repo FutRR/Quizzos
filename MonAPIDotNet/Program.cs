@@ -67,6 +67,17 @@ namespace MonAPIDotNet
 
             builder.Services.AddAuthorization();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("frontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -113,6 +124,7 @@ namespace MonAPIDotNet
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("frontend");
             app.UseAuthentication();
             app.UseAuthorization();
 
