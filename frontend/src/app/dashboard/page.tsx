@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function DashboardPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -6,6 +8,12 @@ export default function DashboardPage() {
         <p className="mt-3 text-zinc-600 dark:text-zinc-400">
           Connexion réussie. Page à construire.
         </p>
+        <Link
+          href="/profile"
+          className="mt-5 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+        >
+          Voir le profil
+        </Link>
       </main>
     </div>
   );

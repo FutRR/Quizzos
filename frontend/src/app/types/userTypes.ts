@@ -1,10 +1,10 @@
 export interface BaseUser {
-    id: string;
-    username: string;   
+    id?: string;
+    userName: string;   
     createdAt: string;
 }
 
 export interface MyUserProfile extends BaseUser {
-    emailVerified: boolean;
+    isEmailVerified: boolean;
     email: string;
 }

@@ -11,6 +11,7 @@ namespace MonAPIDotNet.Service
         Task<UserProfileDTO> GetUserByIdAsync(string id);
         Task<UserProfileDTO> GetUserByUsernameAsync(string username);
         Task<bool> UpdateUserAsync(string id, UserProfileDTO userDto);
+        Task<PrivateUserProfileDTO> GetMyProfileAsync(string username);
     }
     public class UserService : IUserService
     {
@@ -66,6 +67,24 @@ namespace MonAPIDotNet.Service
                     UserName = user.UserName!,
                     AvatarUrl = user.UserProfile.AvatarUrl,
                     CreatedAt = user.UserProfile.CreatedAt
+                };
+            }
+
+            public async Task<PrivateUserProfileDTO> GetMyProfileAsync(string username)
+            {
+                var user = await _context.Users
+                    .Include(u => u.UserProfile)
+                    .FirstOrDefaultAsync(u => u.UserName == username);
+
+                if (user == null || user.UserProfile == null)
+                    return null!;
+                return new PrivateUserProfileDTO
+                {
+                    UserName = user.UserName!,
+                    AvatarUrl = user.UserProfile.AvatarUrl,
+                    CreatedAt = user.UserProfile.CreatedAt,
+                    Email = user.Email,
+                    IsEmailConfirmed = user.EmailConfirmed
                 };
             }
 

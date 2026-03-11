@@ -7,6 +7,7 @@ using MonAPIDotNet.Data;
 using MonAPIDotNet.Keys;
 using MonAPIDotNet.Service;
 using System.Reflection;
+using System.Text.Json;
 
 namespace MonAPIDotNet
 {
@@ -78,7 +79,11 @@ namespace MonAPIDotNet
                 });
             });
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>

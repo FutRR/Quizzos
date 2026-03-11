@@ -71,7 +71,16 @@ namespace MonAPIDotNet.Service
                 storedToken.IsRevoked = true;
                 await _context.SaveChangesAsync();
             }
-        } 
+        }
+
+        public async Task<string?> GetUsernameByRefreshToken(string token)
+        {
+            var storedToken = await _context.RefreshTokens
+                .SingleOrDefaultAsync(rt => rt.Token == token && !rt.IsRevoked);
+            if (storedToken == null || storedToken.IsExpired)
+                return null;
+            return storedToken.Username;
+        }
         
         public bool IsValidAudience(string audience) 
         => !string.IsNullOrEmpty(audience) && _context.AuthorizedApplications.Any(a => a.Audience.ToUpper().Equals(audience));

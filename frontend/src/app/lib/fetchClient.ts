@@ -45,9 +45,6 @@ class FetchClient {
         if (response.ok) {
           const data = await response.json();
           tokenManager.setToken(data.token);
-          if (data.user) {
-            localStorage.setItem("user", JSON.stringify(data.user));
-          }
         } else {
           tokenManager.clearToken();
         }
@@ -102,7 +99,6 @@ class FetchClient {
           return this.request<T>(endpoint, options);
         }
         tokenManager.clearToken();
-        localStorage.removeItem("user");
         window.location.href = "/login";
         throw new Error("Unauthorized");
       }
@@ -217,7 +213,6 @@ class FetchClient {
           return this.postFormData<T>(endpoint, formData, options);
         }
         tokenManager.clearToken();
-        localStorage.removeItem("user");
         window.location.href = "/login";
         throw new Error("Unauthorized");
       }
