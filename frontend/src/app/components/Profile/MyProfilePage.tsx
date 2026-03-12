@@ -28,14 +28,25 @@ export default function MyProfilePage() {
   };
     
   return (
-    <div>
-      <h1>Mon Profil</h1>
+    <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <h1 className="text-2xl font-bold mb-4">Mon Profil</h1>
       {profile ? (
-        <div>
-          <p>Nom d'utilisateur: {profile.userName}</p>
-          <p>Email: {profile.email}</p>
-          <p>Email Vérifié: {profile.isEmailVerified ? "Oui" : "Non"}</p>
-          <p>Créer le: {new Date(profile.createdAt).toLocaleDateString(undefined, options)}</p>
+        <div className="flex-1 bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-700 h-full w-full max-w-md">
+          <div className="flex flex-col items-start text-center mb-4">
+            <h2 className="text-lg font-semibold mb-2">Informations</h2>
+            <p>Nom d'utilisateur: {profile.userName}</p>
+            <p>Email: {profile.email ? profile.email : "Non spécifié"}</p>
+            <p>Email Vérifié: {profile.isEmailVerified ? "Oui" : "Non"}</p>
+            <p>Créer le: {new Date(profile.createdAt).toLocaleDateString(undefined, options)}</p>
+          </div>
+          <div className="flex flex-col items-start text-center mb-4">
+            <h2 className="text-lg font-semibold mb-2">Stats:</h2>
+            <p>Quizz joués: {/*profile.stats.gamesPlayed*/}</p>
+            <p>Quizz créés: {/*profile.stats.gamesCreated*/}</p>
+            <p>Score Général: {/*profile.stats.totalScore*/}</p>
+            <p>Tags favoris: {/*profile.stats.favoriteTags*/}</p>
+            <p>Abonnés: {/*profile.stats.subscribers*/}</p>
+          </div>
         </div>
       ) : (
         <p>Loading profile...</p>
