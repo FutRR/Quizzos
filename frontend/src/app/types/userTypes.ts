@@ -1,7 +1,7 @@
 export interface BaseUser {
     id?: string;
     userName: string;   
-    createdAt: string;
+    createdAt: Date;
 }
 
 export interface MyUserProfile extends BaseUser {
