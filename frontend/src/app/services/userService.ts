@@ -36,6 +36,10 @@ class UserService {
         const response = await fetchClient.get<BaseUser[]>(`/User/users`);
         return response;
     }
+
+    async logout(): Promise<void> {
+        await fetchClient.post("/Auth/logout");
+    }
 }
 
 export default new UserService();

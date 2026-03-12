@@ -52,7 +52,7 @@ namespace MonAPIDotNet.Controllers
         /// <response code="404">Non trouvé. Le profil de l'utilisateur n'existe pas.</response>
         [HttpGet("me")]
         [Authorize]
-        [ProducesResponseType(typeof(UserProfileDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PrivateUserProfileDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
@@ -63,7 +63,7 @@ namespace MonAPIDotNet.Controllers
             {
                 return Unauthorized("Invalid token.");
             }
-            var userProfile = await _userService.GetUserByUsernameAsync(username);
+            var userProfile = await _userService.GetMyProfileAsync(username);
             if (userProfile == null)
             {
                 return NotFound();

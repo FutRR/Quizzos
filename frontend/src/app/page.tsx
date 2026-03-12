@@ -14,9 +14,12 @@ export default function Home() {
           >
             Login
           </Link>
-          <button className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium dark:border-zinc-800">
+          <Link
+            href="/register"
+            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-black"
+          >
             Register
-          </button>
+          </Link>
         </div>
       </main>
     </div>
