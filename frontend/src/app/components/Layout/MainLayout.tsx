@@ -16,11 +16,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 {/* Top padding for mobile menu button */}
                 <div className="lg:hidden h-16" />
                 <div className="p-4 lg:px-6 lg:py-6">
-                    <div className="mb-4">
-                        <div className="mx-auto w-full max-w-3xl">
-                            {/* <SearchBar /> */}
-                        </div>
-                    </div>
                     {children}
                 </div>
             </main>
