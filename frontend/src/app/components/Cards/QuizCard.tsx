@@ -8,7 +8,7 @@ export default function QuizCard() {
   // TODO: Remplacer par les données du quiz réel
     const quiz = {
         title: "La Natation",
-        authorName: "FutRR",
+        authorName: user?.name || "Inconnu",
         tags: ["sport", "natation"],
         image: images?.[0]
             ? `https://picsum.photos/400/300?random=${images[0].id}&grayscale`
