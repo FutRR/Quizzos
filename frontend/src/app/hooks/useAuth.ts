@@ -53,7 +53,7 @@ export function useAuth() {
             // Récupérer les infos utilisateur après inscription
             const profile = await userService.getMyProfile();
             setUser(profile);
-            router.push("/dashboard");
+            router.push("/");
         } catch (error) {
             setError("Registration failed");
             throw error;

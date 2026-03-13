@@ -86,7 +86,7 @@ export default function Sidebar() {
             >
                 {/* Logo */}
                 <div className="h-16 flex items-center px-6 border-b border-gray-700">
-                    <Link href="/dashboard" className="flex items-center space-x-2">
+                    <Link href="/" className="flex items-center space-x-2">
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-lg">Q</span>
                         </div>
