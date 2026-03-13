@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { useState } from "react";
+import { useAuth } from "@/app/hooks/useAuth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -24,26 +26,40 @@ const navItems: NavItem[] = [
 export default function Topbar() {
     const pathname = usePathname();
 
+    const { user, logout } = useAuth();
+
+
     const isActive = (href: string) => pathname === href;
 
     return (
         <nav className="bg-gray-100 dark:bg-gray-900 border-b border-gray-700">
             <div className="flex justify-end w-full">
-                {navItems.map((item) => (
-                    <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`
-                            flex items-center px-4 py-3 rounded-lg transition-all duration-200
-                            ${isActive(item.href)
-                                ? "text-blue-400 font-medium"
-                                : "text-gray-400 hover:text-white"
-                            }
-                        `}
+                {!user && (
+                    <>
+                        <Link
+                            href="/register"
+                            className={isActive("/register") ? "text-blue-400" : "text-gray-400"}
                         >
-                            {item.name}
-                    </Link>
-                ))}
+                            Inscription
+                        </Link>
+
+                        <Link
+                            href="/login"
+                            className={isActive("/login") ? "text-blue-400" : "text-gray-400"}
+                        >
+                            Connexion
+                        </Link>
+                    </>
+                )}
+
+                {user && (
+                    <button
+                        onClick={logout}
+                        className="text-gray-400 hover:text-white px-4 py-3"
+                    >
+                        Déconnexion
+                    </button>
+                )}
             </div>
         </nav>
     );
