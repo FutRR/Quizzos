@@ -17,7 +17,7 @@ export default function QuizCard() {
     };
 
     return (
-        <div className="mx-4">
+        <div>
             <div
                 className="relative rounded-lg overflow-hidden
                            hover:shadow-lg transition-all duration-300
@@ -69,7 +69,7 @@ export default function QuizCard() {
                 ) : (
                     <div className="w-full aspect-[4/3] bg-gray-800 flex items-center justify-center">
                         <span className="text-sm text-gray-400">
-                            Pas d'image
+                            Aucune image disponible
                         </span>
                     </div>
                 )}
