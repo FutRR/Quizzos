@@ -1,6 +1,6 @@
 export interface BaseUser {
     id?: string;
-    userName: string;   
+    userName: string;
     createdAt: Date;
 }
 
