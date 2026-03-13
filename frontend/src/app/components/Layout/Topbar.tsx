@@ -28,7 +28,7 @@ export default function Topbar() {
     const isActive = (href: string) => pathname === href;
 
     return (
-        <nav className="bg-gray-100 dark:bg-gray-900 sticky top-0">
+        <nav className="sticky top-0">
             <div className="flex justify-end w-full">
                 {/* {!user && (
                     navItems.map((item) => (
