@@ -22,27 +22,26 @@ const navItems: NavItem[] = [
 ];
 
 export default function Topbar() {
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
-    
-    const toggleMobileMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    };
+
+    const isActive = (href: string) => pathname === href;
 
     return (
-        <nav className="bg-white dark:bg-gray-800">
+        <nav className="bg-gray-100 dark:bg-gray-900 border-b border-gray-700">
             <div className="flex justify-end w-full">
                 {navItems.map((item) => (
                     <Link
-                        key={item.name}
+                        key={item.href}
                         href={item.href}
-                        className={`px-3 py-2 rounded-md text-sm font-medium ${
-                            pathname === item.href
-                                ? "text-blue-500"
-                                : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                        }`}
-                    >
-                        {item.name}
+                        className={`
+                            flex items-center px-4 py-3 rounded-lg transition-all duration-200
+                            ${isActive(item.href)
+                                ? "text-blue-400 font-medium"
+                                : "text-gray-400 hover:text-white"
+                            }
+                        `}
+                        >
+                            {item.name}
                     </Link>
                 ))}
             </div>
