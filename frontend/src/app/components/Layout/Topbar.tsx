@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import { useState } from "react";
 import { useAuth } from "@/app/hooks/useAuth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -27,21 +25,25 @@ export default function Topbar() {
     const pathname = usePathname();
 
     const { user, logout } = useAuth();
-
-
     const isActive = (href: string) => pathname === href;
 
     return (
-        <nav className="bg-gray-100 dark:bg-gray-900 border-b border-gray-700">
+        <nav className="bg-gray-100 dark:bg-gray-900 sticky top-0">
             <div className="flex justify-end w-full">
                 {!user && (
-                    <>
+                    navItems.map((item) => (
                         <Link
-                            href="/register"
-                            className={isActive("/register") ? "text-blue-400" : "text-gray-400"}
+                            key={item.name}
+                            href={item.href}
+                            className={`px-4 py-2 text-sm font-medium rounded-md ${
+                                isActive(item.href)
+                                    ? "bg-blue-600 text-white"
+                                    : "text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700"
+                            }`}
                         >
-                            Inscription
+                            {item.name}
                         </Link>
+<<<<<<< HEAD
 
                         <Link
                             href="/login"
@@ -71,6 +73,9 @@ export default function Topbar() {
                             <path d="M256 16V48c-56.6 0-108.2 20.9-147.4 55.4L86 80.8C129.8 41.9 190.3 16 256 16zM374.6 246.6l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L265.4 228H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H265.4l-64.1 64.1c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3z" />
                         </svg>
                     </button>
+=======
+                    ))
+>>>>>>> adb19c7ca6bb483092fec5693b98b2e2c8d8dee4
                 )}
             </div>
         </nav>

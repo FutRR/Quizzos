@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/app/hooks/useAuth";
 
 interface NavItem {
     name: string;
@@ -45,6 +46,7 @@ export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
 
+    const { user, logout } = useAuth();
     const isActive = (href: string) => pathname === href;
 
     return (
@@ -85,7 +87,7 @@ export default function Sidebar() {
                 `}
             >
                 {/* Logo */}
-                <div className="h-16 flex items-center px-6 border-b border-gray-700">
+                <div className="h-16 flex items-center px-6">
                     <Link href="/" className="flex items-center space-x-2">
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-lg">Q</span>
@@ -118,6 +120,21 @@ export default function Sidebar() {
                             )}
                         </Link>
                     ))}
+
+                    {!user && (
+                        <Link
+                            href={'/logout'}
+                            onClick={logout}
+                            className={`
+                                flex items-center px-4 py-3 rounded-lg transition-all duration-200
+                                ${isActive('/logout')
+                                    ? "bg-blue-900/50 text-blue-400 font-medium"
+                                    : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                                }
+                            `}>
+                            Déconnexion
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Footer */}
