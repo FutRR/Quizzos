@@ -123,11 +123,11 @@ export default function Sidebar() {
 
                     {user && (
                         <Link
-                            href={'/logout'}
+                            href={'/login'}
                             onClick={logout}
                             className={`
                                 flex items-center px-4 py-3 rounded-lg transition-all duration-200
-                                ${isActive('/logout')
+                                ${isActive('/login')
                                     ? "bg-blue-900/50 text-blue-400 font-medium"
                                     : "text-gray-400 hover:bg-gray-800 hover:text-white"
                                 }
