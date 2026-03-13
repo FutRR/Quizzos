@@ -121,7 +121,7 @@ export default function Sidebar() {
                         </Link>
                     ))}
 
-                    {user && (
+                    {user ? (
                         <Link
                             href={'/login'}
                             onClick={logout}
@@ -148,7 +148,39 @@ export default function Sidebar() {
                             </span>
                             Déconnexion
                         </Link>
-                    )}
+                    ) : (
+                        <div className="space-y-1">
+                            <Link
+                                href={'/login'}
+                                className={`
+                                    flex items-center px-4 py-3 rounded-lg transition-all duration-200
+                                    ${isActive('/login')
+                                        ? "bg-blue-900/50 text-blue-400 font-medium"
+                                        : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                                    }
+                                `}>
+                                <span className="ml-3">Connexion</span>
+                                {isActive('/login') && (
+                                    <span className="ml-auto w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                                )}
+                            </Link>
+                            <Link
+                                href={'/register'}
+                                className={`
+                                    flex items-center px-4 py-3 rounded-lg transition-all duration-200
+                                    ${isActive('/register')
+                                        ? "bg-blue-900/50 text-blue-400 font-medium"
+                                        : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                                    }
+                                `}>
+                                <span className="ml-3">Inscription</span>
+                                {isActive('/register') && (
+                                    <span className="ml-auto w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                                )}
+                            </Link>
+                        </div>
+                    )
+                    }
                 </nav>
 
                 {/* Footer */}

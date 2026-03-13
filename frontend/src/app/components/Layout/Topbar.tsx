@@ -5,21 +5,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 
-interface NavItem {
-    name: string;
-    href: string;
-}
+// interface NavItem {
+//     name: string;
+//     href: string;
+// }
 
-const navItems: NavItem[] = [
-    {
-        name: "Inscription",
-        href:"/register",
-    },
-    {
-        name: "Connexion",
-        href:"/login",
-    }
-];
+// const navItems: NavItem[] = [
+//     {
+//         name: "Inscription",
+//         href:"/register",
+//     },
+//     {
+//         name: "Connexion",
+//         href:"/login",
+//     }
+// ];
 
 export default function Topbar() {
     const pathname = usePathname();
@@ -30,7 +30,7 @@ export default function Topbar() {
     return (
         <nav className="bg-gray-100 dark:bg-gray-900 sticky top-0">
             <div className="flex justify-end w-full">
-                {!user && (
+                {/* {!user && (
                     navItems.map((item) => (
                         <Link
                             key={item.name}
@@ -44,7 +44,7 @@ export default function Topbar() {
                             {item.name}
                         </Link>
                     ))
-                )}
+                )} */}
             </div>
         </nav>
     );
