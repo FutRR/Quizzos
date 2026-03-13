@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/app/hooks/useAuth";
 import { MyUserProfile } from "@/app/types/userTypes";
 import userService from "@/app/services/userService";
-import authService from "@/app/services/authService";
+
 
 export default function MyProfilePage() {
   const { user, logout } = useAuth();
