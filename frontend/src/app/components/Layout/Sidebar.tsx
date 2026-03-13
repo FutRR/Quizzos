@@ -80,7 +80,7 @@ export default function Sidebar() {
             <aside
                 className={`
                     fixed top-0 left-0 z-40 h-screen w-64 
-                    bg-gray-900 border-r border-gray-700 
+                    border-r border-gray-700
                     transform transition-transform duration-300 ease-in-out
                     lg:translate-x-0
                     ${isOpen ? "translate-x-0" : "-translate-x-full"}
