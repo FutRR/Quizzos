@@ -36,7 +36,7 @@ export function useAuth() {
             // Récupérer les infos utilisateur après login
             const profile = await userService.getMyProfile();
             setUser(profile);
-            router.push("/dashboard");
+            router.push("/");
         } catch (error) {
             setError("Login failed");
             throw error;
