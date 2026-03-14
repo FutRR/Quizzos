@@ -6,6 +6,7 @@ import { useAuth } from "@/app/hooks/useAuth";
 import { MyUserProfile } from "@/app/types/userTypes";
 import userService from "@/app/services/userService";
 import { useJsonPlaceholder } from "@/app/hooks/useJsonPlaceholder";
+import { Temporal } from "@js-temporal/polyfill";
 
 
 export default function MyProfilePage() {
@@ -40,7 +41,7 @@ export default function MyProfilePage() {
     image: images?.[0]? `https://picsum.photos/400/300?random=${images[0].id}&grayscale` : "",
     imageAlt: images?.[0]?.title || "Avatar de l'utilisateur",
   }
-    
+    console.log(profile?.createdAt)
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Mon Profil</h1>
@@ -52,7 +53,7 @@ export default function MyProfilePage() {
                 <h3 className="text-xl font-bold">{profile.userName}</h3>
                 <p>Email: {profile.email ? profile.email : "Non spécifié"}</p>
                 <p>Email Vérifié: {profile.isEmailVerified ? "Oui" : "Non"}</p>
-                <p>Compte crée le: {new Date(profile.createdAt).toLocaleDateString(undefined, options)}</p>
+                <p>Compte crée le: {Temporal.PlainDateTime.from(profile.createdAt).toLocaleString(undefined, options)}</p>
               </div>
             </div>
           <div className="text-left">
