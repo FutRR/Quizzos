@@ -38,7 +38,7 @@ export default function MyProfilePage() {
   };
 
   const avatar = {
-    image: images?.[0]? `https://picsum.photos/400/300?random=${images[0].id}&grayscale` : "",
+    image: images?.[0]? `https://picsum.photos/400/300?random=${images[0].id}` : "",
     imageAlt: images?.[0]?.title || "Avatar de l'utilisateur",
   }
     console.log(profile?.createdAt)
