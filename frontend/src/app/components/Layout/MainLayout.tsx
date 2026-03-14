@@ -2,6 +2,7 @@
 
 import Topbar from "./Topbar";
 import Sidebar from "./Sidebar";
+import { AuthProvider } from "@/app/hooks/useAuth";
 
 interface MainLayoutProps {
     children: React.ReactNode;
@@ -9,6 +10,7 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children }: MainLayoutProps) {
     return (
+        <AuthProvider>
         <div className="flex flex-col min-h-screen bg-stone-100 dark:bg-slate-900">
             { <Topbar /> }
             { <Sidebar />}
@@ -20,5 +22,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </div>
             </main>
         </div>
+        </AuthProvider>
     );
 }
