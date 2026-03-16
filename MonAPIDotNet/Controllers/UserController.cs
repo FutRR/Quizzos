@@ -45,7 +45,7 @@ namespace MonAPIDotNet.Controllers
         /// <summary>
         /// Récupère le profil de l'utilisateur actuellement connecté.
         /// </summary>
-        /// <param mae="userDto">Le profil de l'utilisateur actuellement connecté.</param>  
+        /// <param name="userDto">Le profil de l'utilisateur actuellement connecté.</param>
         /// <returns>Le profil de l'utilisateur actuellement connecté.</returns>
         /// <response code="200">Le profil de l'utilisateur actuellement connecté.</response>
         /// <response code="401">Non autorisé. L'utilisateur n'est pas authentifié.</response>
