@@ -142,6 +142,7 @@ namespace MonAPIDotNet
 
             app.UseHttpsRedirection();
             app.UseCors("frontend");
+            app.UseMiddleware<CsrfMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
 

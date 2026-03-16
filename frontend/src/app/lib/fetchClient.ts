@@ -77,6 +77,16 @@ class FetchClient {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
+    // Ajouter le header CSRF si disponible
+    const csrfToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("XSRF-TOKEN="))
+      ?.split("=")[1];
+    if (csrfToken) {
+      headers["X-CSRF-Token"] = csrfToken;
+    }
+    
+
     // Créer un AbortController pour le timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
