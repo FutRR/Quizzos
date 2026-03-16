@@ -22,6 +22,7 @@
             <response code="401">Non autorisé. L'utilisateur n'est pas authentifié.</response>
             <response code="404">Non trouvé. Le profil de l'utilisateur n'existe pas.</response>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:MonAPIDotNet.Controllers.UserController.GetUserProfile(System.String)" -->
         <member name="T:MonAPIDotNet.Migrations.Init">
             <inheritdoc />
         </member>
