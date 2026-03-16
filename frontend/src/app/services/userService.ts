@@ -5,7 +5,6 @@ import { MyUserProfile, BaseUser } from "../types/userTypes";
 export interface UpdateProfileData {
     username?: string;
     email?: string;
-    bio?: string;
 }
 
 class UserService {
