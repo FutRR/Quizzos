@@ -70,5 +70,28 @@ namespace MonAPIDotNet.Controllers
             }
             return Ok(userProfile);
         }
+
+        // GET /api/user/{username}
+
+        /// <summary>
+        /// Récupère le profil public d'un utilisateur par son nom d'utilisateur.
+        /// </summary>
+        /// <param name="username">Le nom d'utilisateur de l'utilisateur dont on veut récupérer le profil public.</param>
+        /// <returns>Le profil public de l'utilisateur.</returns>
+        /// <response code="200">Le profil public de l'utilisateur.</response>
+        /// <response code="404">Non trouvé. L'utilisateur ou son profil public n'ex
+        [HttpGet("{username}")]
+        [ProducesResponseType(typeof(UserProfileDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUserProfile(string username)
+        {
+            var userProfile = await _userService.GetUserByUsernameAsync(username);
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+            return Ok(userProfile);
+        }
+
     }
 }
