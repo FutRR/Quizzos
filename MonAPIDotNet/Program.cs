@@ -77,7 +77,7 @@ namespace MonAPIDotNet
                     }
                 };  
             });
-
+            // Add authorization services
             builder.Services.AddAuthorization();
 
             builder.Services.AddCors(options =>
