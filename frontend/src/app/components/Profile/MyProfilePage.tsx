@@ -58,8 +58,8 @@ export default function MyProfilePage() {
             </div>
           <div className="text-left">
             <h2 className="text-lg font-semibold mb-2">Stats:</h2>
-            <p>Quizz joués: {/*profile.stats.gamesPlayed*/}</p>
-            <p>Quizz créés: {/*profile.stats.gamesCreated*/}</p>
+            <p>Quiz joués: {/*profile.stats.gamesPlayed*/}</p>
+            <p>Quiz créés: {/*profile.stats.gamesCreated*/}</p>
             <p>Score Général: {/*profile.stats.totalScore*/}</p>
             <p>Tags favoris: {/*profile.stats.favoriteTags*/}</p>
             <p>Abonnés: {/*profile.stats.subscribers*/}</p>

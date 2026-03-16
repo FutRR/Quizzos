@@ -23,20 +23,20 @@ const navItems: NavItem[] = [
         ),
     },
     {
+        name: "Quiz",
+        href: "/quizzes",
+        icon: (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+        ),
+    },
+    {
         name: "Profil",
         href: "/profile",
         icon: (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-        ),
-    },
-    {
-        name: "Quizz",
-        href: "/quizzes",
-        icon: (
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
         ),
     },
@@ -79,7 +79,7 @@ export default function Sidebar() {
             {/* Sidebar */}
             <aside
                 className={`
-                    fixed top-0 left-0 z-40 h-screen w-64 
+                    fixed top-0 left-0 z-40 flex flex-col h-screen w-64 bg-gray-900 
                     border-r border-gray-700
                     transform transition-transform duration-300 ease-in-out
                     lg:translate-x-0
@@ -97,57 +97,64 @@ export default function Sidebar() {
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setIsOpen(false)}
-                            className={`
-                                flex items-center px-4 py-3 rounded-lg transition-all duration-200
-                                ${isActive(item.href)
-                                    ? "bg-blue-900/50 text-blue-400 font-medium"
-                                    : "text-gray-400 hover:bg-gray-800 hover:text-white"
-                                }
-                            `}
-                        >
-                            <span className={isActive(item.href) ? "text-blue-400" : "text-gray-500"}>
-                                {item.icon}
-                            </span>
-                            <span className="ml-3">{item.name}</span>
-                            {isActive(item.href) && (
-                                <span className="ml-auto w-1.5 h-1.5 bg-blue-400 rounded-full" />
-                            )}
-                        </Link>
-                    ))}
+                <nav className="flex-1 flex flex-col justify-between h-50% px-4 py-6 space-y-1 overflow-y-auto">
+                    <div>
+                        {navItems.map((item) => (
+                        
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setIsOpen(false)}
+                                className={`
+                                    flex items-center px-4 py-3 rounded-lg transition-all duration-200
+                                    ${isActive(item.href)
+                                        ? "bg-blue-900/50 text-blue-400 font-medium"
+                                        : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                                    }
+                                `}
+                            >
+                                <span className={isActive(item.href) ? "text-blue-400" : "text-gray-500"}>
+                                    {item.icon}
+                                </span>
+                                <span className="ml-3">{item.name}</span>
+                                {isActive(item.href) && (
+                                    <span className="ml-auto w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                                )}
+                            </Link>
+                        
+                        ))}
+                    </div>
+                    
 
                     {user ? (
-                        <Link
-                            href={'/login'}
-                            onClick={logout}
-                            className={`
-                                flex items-center px-4 py-3 rounded-lg transition-all duration-200
-                                ${isActive('/login')
-                                    ? "bg-blue-900/50 text-blue-400 font-medium"
-                                    : "text-gray-400 hover:bg-gray-800 hover:text-white"
-                                }
-                            `}>
-                            <span className="text-gray-500 mr-2">
-                                        <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 512 512"
-                                        className="w-5 h-5 sm:w-6 sm:h-6"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            opacity="0.4"
-                                            d="M256 464c114.9 0 208-93.1 208-208S370.9 48 256 48V16c132.5 0 240 107.5 240 240S388.5 496 256 496s-240-107.5-240-240c0-65.1 25.9-124.2 68-167.6l22.6 22.6C68.9 147.8 48 199.4 48 256c0 114.9 93.1 208 208 208z"
-                                        />
-                                        <path d="M256 16V48c-56.6 0-108.2 20.9-147.4 55.4L86 80.8C129.8 41.9 190.3 16 256 16zM374.6 246.6l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L265.4 228H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H265.4l-64.1 64.1c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3z" />
-                                    </svg>
-                            </span>
-                            Déconnexion
-                        </Link>
+                        <div>
+                            <Link
+                                href={'/login'}
+                                onClick={logout}
+                                className={`
+                                    flex items-center px-4 py-3 rounded-lg transition-all duration-200
+                                    ${isActive('/login')
+                                        ? "bg-blue-900/50 text-blue-400 font-medium"
+                                        : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                                    }
+                                `}>
+                                <span className="text-gray-500 mr-2">
+                                            <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 512 512"
+                                            className="w-5 h-5 sm:w-6 sm:h-6"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                opacity="0.4"
+                                                d="M256 464c114.9 0 208-93.1 208-208S370.9 48 256 48V16c132.5 0 240 107.5 240 240S388.5 496 256 496s-240-107.5-240-240c0-65.1 25.9-124.2 68-167.6l22.6 22.6C68.9 147.8 48 199.4 48 256c0 114.9 93.1 208 208 208z"
+                                            />
+                                            <path d="M256 16V48c-56.6 0-108.2 20.9-147.4 55.4L86 80.8C129.8 41.9 190.3 16 256 16zM374.6 246.6l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L265.4 228H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H265.4l-64.1 64.1c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3z" />
+                                        </svg>
+                                </span>
+                                Déconnexion
+                            </Link>
+                        </div>
                     ) : (
                         <div className="space-y-1">
                             <Link
