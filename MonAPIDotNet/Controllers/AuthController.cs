@@ -33,7 +33,7 @@ namespace MonAPIDotNet.Controllers
                 return BadRequest("Audience is invalid.");
 
             var userClaims = await _userManager.GetClaimsAsync(user);
-            var token = _jwtService.GenerateJwtToken(user.UserName, request.Audience, userClaims.ToList());
+            var token = _jwtService.GenerateJwtToken(user.UserName!, request.Audience, userClaims.ToList());
             var refreshToken = _jwtService.GenerateRefreshToken();
 
             await _jwtService.SaveRefreshToken(request.Username, refreshToken);

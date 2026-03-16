@@ -25,6 +25,18 @@ namespace MonAPIDotNet
             builder.Services.AddScoped<JwtService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true; // Empêche l'accès JavaScript au cookie (protection XSS)
+                options.Cookie.SecurePolicy = builder.Environment.IsProduction() ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
+                options.Cookie.SameSite = SameSiteMode.Lax; // Lax permet les requêtes cross-site pour les navigations
+                //options.Cookie.Secure = true; // Le cookie est envoyé uniquement sur HTTPS
+                // options.Cookie.SameSite = SameSiteMode.Strict; // Protection CSRF
+                options.Cookie.Name = "RefreshToken"; // Nom du cookie
+                options.Cookie.MaxAge = TimeSpan.FromDays(7); // Durée de vie du cookie
+                options.LoginPath = "/login"; // Page de connexion
+                options.LogoutPath = "/logout"; // Page de déconnexion
+            });
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
