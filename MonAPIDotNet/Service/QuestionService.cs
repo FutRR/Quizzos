@@ -104,13 +104,23 @@ namespace MonAPIDotNet.Service
                 UpdatedAt = q.UpdatedAt,
                 QuizId = q.QuizId,
                 ImagesUrls = q.Images.Select(i => i.Url).ToList(),
-                Answers = q.Answers.Select(a => new AnswerDTO { }).ToList()
+                Answers = q.Answers.Select(a => new AnswerDTO
+                {
+                    Id = a.Id,
+                    Value = a.Value,
+                    IsCorrect = a.IsCorrect,
+                    QuestionId = a.QuestionId
+                }).ToList()
             }).ToList();
         }
 
         public async Task<QuestionDTO> GetQuestionByIdAsync(int id)
         {
-            var question = await _context.Questions.FindAsync(id);
+            var question = await _context.Questions
+                .Include(q => q.Answers)
+                .Include(q => q.Images)
+                .FirstOrDefaultAsync(q => q.Id == id);
+
             if (question == null) return null;
 
             return new QuestionDTO
@@ -118,6 +128,14 @@ namespace MonAPIDotNet.Service
                 Id = question.Id,
                 Text = question.Text,
                 Type = question.Type.ToString(),
+                ImagesUrls = question.Images.Select(i => i.Url).ToList(),
+                Answers = question.Answers.Select(a => new AnswerDTO
+                {
+                    Id = a.Id,
+                    Value = a.Value,
+                    IsCorrect = a.IsCorrect,
+                    QuestionId = a.QuestionId
+                }).ToList(),
                 IsTimed = question.IsTimed,
                 TimeLimit = question.TimeLimit,
                 CreatedAt = question.CreatedAt,

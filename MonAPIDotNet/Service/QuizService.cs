@@ -94,6 +94,9 @@ namespace MonAPIDotNet.Service
             var quizzes = await _context.Quizzes
                 .Include(q => q.Author)
                 .Include(q => q.Questions)
+                    .ThenInclude(q => q.Images)
+                .Include(q => q.Questions)
+                    .ThenInclude(q => q.Answers)
                 .Include(q => q.QuizTags)
                     .ThenInclude(qt => qt.Tag)
                 .ToListAsync();
@@ -109,7 +112,25 @@ namespace MonAPIDotNet.Service
                 AuthorName = q.Author?.UserName ?? string.Empty,
                 CreatedAt = q.CreatedAt,
                 UpdatedAt = q.UpdatedAt,
-                Questions = q.Questions.Select(question => new QuestionDTO {}).ToList(),
+                Questions = q.Questions.Select(question => new QuestionDTO
+                {
+                    Id = question.Id,
+                    Text = question.Text,
+                    Type = question.Type.ToString(),
+                    IsTimed = question.IsTimed,
+                    TimeLimit = question.TimeLimit,
+                    CreatedAt = question.CreatedAt,
+                    UpdatedAt = question.UpdatedAt,
+                    QuizId = question.QuizId,
+                    ImagesUrls = question.Images.Select(qi => qi.Url).ToList(),
+                    Answers = question.Answers.Select(answer => new AnswerDTO
+                    {
+                        Id = answer.Id,
+                        Value = answer.Value,
+                        IsCorrect = answer.IsCorrect,
+                        QuestionId = answer.QuestionId
+                    }).ToList()
+                }).ToList(),
                 TagIds = q.QuizTags.Select(qt => qt.TagId).ToList()
             }).ToList();
         }
@@ -119,8 +140,11 @@ namespace MonAPIDotNet.Service
             var quiz = await _context.Quizzes
                 .Include(q => q.Author)
                 .Include(q => q.Questions)
+                    .ThenInclude(q => q.Images)
+                .Include(q => q.Questions)
+                    .ThenInclude(q => q.Answers)
                 .Include(q => q.QuizTags)
-                    .ThenInclude(qt => qt.Tag)
+                    .ThenInclude(qt => qt.Tag)  
                 .FirstOrDefaultAsync(q => q.Id == id);
 
             if (quiz == null) return null;
@@ -130,6 +154,29 @@ namespace MonAPIDotNet.Service
                 Id = quiz.Id,
                 Title = quiz.Title,
                 Description = quiz.Description ?? string.Empty,
+                Difficulty = quiz.Difficulty.ToString(),
+                ImageUrl = quiz.ImageUrl,
+                AuthorName = quiz.Author?.UserName ?? string.Empty,
+                Questions = quiz.Questions.Select(question => new QuestionDTO
+                {
+                    Id = question.Id,
+                    Text = question.Text,
+                    Type = question.Type.ToString(),
+                    IsTimed = question.IsTimed,
+                    TimeLimit = question.TimeLimit,
+                    CreatedAt = question.CreatedAt,
+                    UpdatedAt = question.UpdatedAt,
+                    QuizId = question.QuizId,
+                    ImagesUrls = question.Images.Select(qi => qi.Url).ToList(),
+                    Answers = question.Answers.Select(answer => new AnswerDTO
+                    {
+                        Id = answer.Id,
+                        Value = answer.Value,
+                        IsCorrect = answer.IsCorrect,
+                        QuestionId = answer.QuestionId
+                    }).ToList()
+                }).ToList(),
+                TagIds = quiz.QuizTags.Select(qt => qt.TagId).ToList(),
                 AuthorId = quiz.AuthorId,
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt
