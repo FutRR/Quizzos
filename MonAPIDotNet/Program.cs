@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MonAPIDotNet.Data;
 using MonAPIDotNet.Keys;
+using MonAPIDotNet.Middleware;
 using MonAPIDotNet.Service;
 using System.Reflection;
 using System.Text.Json;
@@ -26,6 +27,7 @@ namespace MonAPIDotNet
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IQuestionService, QuestionService>();
             builder.Services.AddScoped<IQuizService, QuizService>();
+            builder.Services.AddScoped<IAnswerService, AnswerService>();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -142,6 +144,7 @@ namespace MonAPIDotNet
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseCors("frontend");
             app.UseMiddleware<CsrfMiddleware>();

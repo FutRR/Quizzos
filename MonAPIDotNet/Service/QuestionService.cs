@@ -1,5 +1,6 @@
 using MonAPIDotNet.Data;
 using MonAPIDotNet.DTOs;
+using MonAPIDotNet.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MonAPIDotNet.Service
@@ -9,7 +10,7 @@ namespace MonAPIDotNet.Service
         Task<QuestionDTO> CreateQuestionAsync(QuestionDTO Dto, int quizId);
         Task<QuestionDTO> UpdateQuestionAsync(int id, QuestionDTO dto);
         Task<bool> DeleteQuestionAsync(int id);
-        Task<List<QuestionDTO>> GetAllQuestionsAsync();
+        Task<List<QuestionDTO>> GetAllQuestionsAsync(int page = 1, int pageSize = 20);
         Task<QuestionDTO> GetQuestionByIdAsync(int id);
     }
     public class QuestionService : IQuestionService
@@ -53,7 +54,8 @@ namespace MonAPIDotNet.Service
         public async Task<QuestionDTO> UpdateQuestionAsync(int id, QuestionDTO dto)
         {
             var question = await _context.Questions.FindAsync(id);
-            if (question == null) return null;
+            if (question == null)
+                throw new NotFoundException("Question", id);
 
             question.Text = dto.Text;
             question.Type = Enum.Parse<QuestionType>(dto.Type);
@@ -79,18 +81,26 @@ namespace MonAPIDotNet.Service
         public async Task<bool> DeleteQuestionAsync(int id)
         {
             var question = await _context.Questions.FindAsync(id);
-            if (question == null) return false;
+            if (question == null)
+                throw new NotFoundException("Question", id);
 
             _context.Questions.Remove(question);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<List<QuestionDTO>> GetAllQuestionsAsync()
+        public async Task<List<QuestionDTO>> GetAllQuestionsAsync(int page = 1, int pageSize = 20)
         {
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 20;
+            if (pageSize > 100) pageSize = 100;
+
             var questions = await _context.Questions
                 .Include(q => q.Answers)
                 .Include(q => q.Images)
+                .OrderBy(q => q.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             return questions.Select(q => new QuestionDTO
@@ -121,7 +131,8 @@ namespace MonAPIDotNet.Service
                 .Include(q => q.Images)
                 .FirstOrDefaultAsync(q => q.Id == id);
 
-            if (question == null) return null;
+            if (question == null)
+                throw new NotFoundException("Question", id);
 
             return new QuestionDTO
             {

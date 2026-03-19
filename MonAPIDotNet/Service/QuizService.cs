@@ -1,5 +1,6 @@
 using MonAPIDotNet.Data;
 using MonAPIDotNet.DTOs;
+using MonAPIDotNet.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MonAPIDotNet.Service
@@ -11,7 +12,7 @@ namespace MonAPIDotNet.Service
         Task<QuizDTO> UpdateQuizAsync(int id, QuizDTO dto);
         Task<bool> DeleteQuizAsync(int id);
 
-        Task<List<QuizDTO>> GetAllQuizzesAsync();
+        Task<List<QuizDTO>> GetAllQuizzesAsync(int page = 1, int pageSize = 20);
         Task<QuizDTO> GetQuizByIdAsync(int id);
     }
 
@@ -56,7 +57,8 @@ namespace MonAPIDotNet.Service
         public async Task<QuizDTO> UpdateQuizAsync(int id, QuizDTO dto)
         {
             var quiz = await _context.Quizzes.FindAsync(id);
-            if (quiz == null) return null;
+            if (quiz == null)
+                throw new NotFoundException("Quiz", id);
             
             quiz.Title = dto.Title;
             quiz.Description = dto.Description;
@@ -82,15 +84,20 @@ namespace MonAPIDotNet.Service
         public async Task<bool> DeleteQuizAsync(int id)
         {
             var quiz = await _context.Quizzes.FindAsync(id);
-            if (quiz == null) return false;
+            if (quiz == null)
+                throw new NotFoundException("Quiz", id);
             
             _context.Quizzes.Remove(quiz);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<List<QuizDTO>> GetAllQuizzesAsync()
+        public async Task<List<QuizDTO>> GetAllQuizzesAsync(int page = 1, int pageSize = 20)
         {
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 20;
+            if (pageSize > 100) pageSize = 100;
+
             var quizzes = await _context.Quizzes
                 .Include(q => q.Author)
                 .Include(q => q.Questions)
@@ -99,6 +106,9 @@ namespace MonAPIDotNet.Service
                     .ThenInclude(q => q.Answers)
                 .Include(q => q.QuizTags)
                     .ThenInclude(qt => qt.Tag)
+                .OrderBy(q => q.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             return quizzes.Select(q => new QuizDTO
@@ -147,7 +157,8 @@ namespace MonAPIDotNet.Service
                     .ThenInclude(qt => qt.Tag)  
                 .FirstOrDefaultAsync(q => q.Id == id);
 
-            if (quiz == null) return null;
+            if (quiz == null)
+                throw new NotFoundException("Quiz", id);
             
             return new QuizDTO
             {
