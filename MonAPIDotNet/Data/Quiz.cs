@@ -8,10 +8,10 @@ namespace MonAPIDotNet.Data
         public int Id { get; set; }
         
         [Required]
-        [MaxLength(200)]
+        [MaxLength(20)]
         public string Title { get; set; } = string.Empty;
         
-        [MaxLength(1000)]
+        [MaxLength(500)]
         public string? Description { get; set; }
         
         [Required]
@@ -19,7 +19,7 @@ namespace MonAPIDotNet.Data
         public ApplicationUser Author { get; set; }
         
         public DifficultyType Difficulty { get; set; }
-        
+        [MaxLength(255)]
         public string? ImageUrl { get; set; }
         
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
