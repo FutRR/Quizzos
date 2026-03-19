@@ -30,6 +30,8 @@ namespace MonAPIDotNet.Service
             {
                 Title = dto.Title,
                 Description = dto.Description,
+                Difficulty = Enum.Parse<DifficultyType>(dto.Difficulty),
+                ImageUrl = dto.ImageUrl,
                 AuthorId = authorId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -43,6 +45,8 @@ namespace MonAPIDotNet.Service
                 Id = quiz.Id,
                 Title = quiz.Title,
                 Description = quiz.Description,
+                Difficulty = quiz.Difficulty.ToString(),
+                ImageUrl = quiz.ImageUrl,
                 AuthorId = quiz.AuthorId,
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt
@@ -56,6 +60,8 @@ namespace MonAPIDotNet.Service
             
             quiz.Title = dto.Title;
             quiz.Description = dto.Description;
+            quiz.Difficulty = Enum.Parse<DifficultyType>(dto.Difficulty);
+            quiz.ImageUrl = dto.ImageUrl;
             quiz.UpdatedAt = DateTime.UtcNow;
             
             await _context.SaveChangesAsync();
@@ -83,15 +89,25 @@ namespace MonAPIDotNet.Service
 
         public async Task<List<QuizDTO>> GetAllQuizzesAsync()
         {
-            var quizzes = await _context.Quizzes.ToListAsync();
+            var quizzes = await _context.Quizzes
+                .Include(q => q.Author)
+                .Include(q => q.Questions)
+                .Include(q => q.QuizTags)
+                    .ThenInclude(qt => qt.Tag)
+                .ToListAsync();
+
             return quizzes.Select(q => new QuizDTO
             {
                 Id = q.Id,
                 Title = q.Title,
-                Description = q.Description,
+                Description = q.Description ?? string.Empty,
+                Difficulty = q.Difficulty.ToString(),
+                ImageUrl = q.ImageUrl,
                 AuthorId = q.AuthorId,
                 CreatedAt = q.CreatedAt,
-                UpdatedAt = q.UpdatedAt
+                UpdatedAt = q.UpdatedAt,
+                Questions = q.Questions.Select(question => new QuestionDTO {}).ToList(),
+                TagIds = q.QuizTags.Select(qt => qt.TagId).ToList()
             }).ToList();
         }
 
@@ -104,7 +120,7 @@ namespace MonAPIDotNet.Service
             {
                 Id = quiz.Id,
                 Title = quiz.Title,
-                Description = quiz.Description,
+                Description = quiz.Description ?? string.Empty,
                 AuthorId = quiz.AuthorId,
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt
