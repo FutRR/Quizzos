@@ -28,5 +28,7 @@ namespace MonAPIDotNet.Data
         
         // Relations many-to-many
         public ICollection<QuizTag> QuizTags { get; set; } = new List<QuizTag>();
+        // Relations one-to-many
+        public ICollection<Question> Questions { get; set; } = new List<Question>();
     }
 }
