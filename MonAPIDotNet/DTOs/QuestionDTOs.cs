@@ -6,7 +6,5 @@ namespace MonAPIDotNet.DTOs
         public string Text { get; set; } = string.Empty;
         public string Type { get; set; }
         public int QuizId { get; set; }
-        public List<string> Options { get; set; } = new List<string>();
-        public string? CorrectAnswer { get; set; }
     }
 }
