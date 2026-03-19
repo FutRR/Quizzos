@@ -19,5 +19,36 @@ namespace MonAPIDotNet.Data
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Configure many-to-many relationship between Quiz and Tag
+            modelBuilder.Entity<QuizTag>()
+                .HasKey(qt => new { qt.QuizId, qt.TagId });
+
+            modelBuilder.Entity<QuizTag>()
+                .HasOne(qt => qt.Quiz)
+                .WithMany(q => q.QuizTags)
+                .HasForeignKey(qt => qt.QuizId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<QuizTag>()
+                .HasOne(qt => qt.Tag)
+                .WithMany(t => t.QuizTags)
+                .HasForeignKey(qt => qt.TagId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // Indexes for performance
+            modelBuilder.Entity<Quiz>()
+                .HasIndex(q => q.Title);
+            
+            modelBuilder.Entity<Quiz>()
+                .HasIndex(q => q.AuthorId);
+            
+            modelBuilder.Entity<Quiz>()
+                .HasIndex(q => q.CreatedAt);
+
+        }
     }
 }

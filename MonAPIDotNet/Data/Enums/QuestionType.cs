@@ -3,7 +3,7 @@ namespace MonAPIDotNet.Data
     public enum QuestionType
     {
         MultipleChoice,
-        TreueFalse,
+        TrueFalse,
         ShortAnswer,
     }
 }
