@@ -71,6 +71,8 @@ namespace MonAPIDotNet.Service
                 Id = quiz.Id,
                 Title = quiz.Title,
                 Description = quiz.Description,
+                Difficulty = quiz.Difficulty.ToString(),
+                ImageUrl = quiz.ImageUrl,
                 AuthorId = quiz.AuthorId,
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt
@@ -104,6 +106,7 @@ namespace MonAPIDotNet.Service
                 Difficulty = q.Difficulty.ToString(),
                 ImageUrl = q.ImageUrl,
                 AuthorId = q.AuthorId,
+                AuthorName = q.Author?.UserName ?? string.Empty,
                 CreatedAt = q.CreatedAt,
                 UpdatedAt = q.UpdatedAt,
                 Questions = q.Questions.Select(question => new QuestionDTO {}).ToList(),
@@ -113,7 +116,13 @@ namespace MonAPIDotNet.Service
 
         public async Task<QuizDTO> GetQuizByIdAsync(int id)
         {
-            var quiz = await _context.Quizzes.FindAsync(id);
+            var quiz = await _context.Quizzes
+                .Include(q => q.Author)
+                .Include(q => q.Questions)
+                .Include(q => q.QuizTags)
+                    .ThenInclude(qt => qt.Tag)
+                .FirstOrDefaultAsync(q => q.Id == id);
+
             if (quiz == null) return null;
             
             return new QuizDTO
