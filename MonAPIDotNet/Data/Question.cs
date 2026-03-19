@@ -8,7 +8,6 @@ namespace MonAPIDotNet.Data
         [Required]
         [MaxLength(200)]
         public string Text { get; set; } = string.Empty;
-        public ICollection<QuestionImage> Images { get; set; } = new List<QuestionImage>();
         public bool IsTimed { get; set; }
         [Range(3, 300)]
         public int? TimeLimit { get; set; }
@@ -18,6 +17,8 @@ namespace MonAPIDotNet.Data
 
         public int QuizId { get; set; }
         public Quiz Quiz { get; set; }
+        // Relations one-to-many
+        public ICollection<QuestionImage> Images { get; set; } = new List<QuestionImage>();
         public ICollection<Answer> Answers { get; set; } = new List<Answer>();
     }
 }
