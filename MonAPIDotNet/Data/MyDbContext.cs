@@ -38,14 +38,14 @@ namespace MonAPIDotNet.Data
                 .WithMany(t => t.QuizTags)
                 .HasForeignKey(qt => qt.TagId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             // Indexes for performance
             modelBuilder.Entity<Quiz>()
                 .HasIndex(q => q.Title);
-            
+
             modelBuilder.Entity<Quiz>()
                 .HasIndex(q => q.AuthorId);
-            
+
             modelBuilder.Entity<Quiz>()
                 .HasIndex(q => q.CreatedAt);
 
