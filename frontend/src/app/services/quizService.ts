@@ -1,0 +1,29 @@
+import fetchClient from "../lib/fetchClient";
+
+export class QuizService {
+    // Get all quizzes
+    async getQuizzes(): Promise<any> {
+        const response = await fetchClient.get("/quiz/quizzes");
+        return response;
+    }
+    // Get quiz by ID
+    async getQuizById(id: string): Promise<any> {
+        const response = await fetchClient.get(`/quiz/${id}`);
+        return response;
+    }
+    // Create quiz
+    async createQuiz(data: any): Promise<any> {
+        const response = await fetchClient.post("/quiz/new", data);
+        return response;
+    }
+    // Update quiz
+    async updateQuiz(id: string, data: any): Promise<any> {
+        const response = await fetchClient.put(`/quiz/${id}`, data);
+        return response;
+    }
+    // Delete quiz
+    async deleteQuiz(id: string): Promise<any> {
+        const response = await fetchClient.delete(`/quiz/${id}`);
+        return response;
+    }
+}

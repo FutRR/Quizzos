@@ -64,7 +64,7 @@ namespace MonAPIDotNet.Controllers
         /// <response code="400">Requête invalide. Les données du quiz sont manquantes ou invalides.</response>
         /// <response code="401">Non autorisé. L'utilisateur doit être authentifié pour créer un quiz.</response>
         [Authorize]
-        [HttpPost]
+        [HttpPost("new")]
         [ProducesResponseType(typeof(QuizDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
