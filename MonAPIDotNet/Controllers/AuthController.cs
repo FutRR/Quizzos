@@ -33,7 +33,7 @@ namespace MonAPIDotNet.Controllers
                 return BadRequest("Audience is invalid.");
 
             var userClaims = await _userManager.GetClaimsAsync(user);
-            var token = _jwtService.GenerateJwtToken(user.UserName!, request.Audience, userClaims.ToList());
+            var token = _jwtService.GenerateJwtToken(user.Id, request.Audience, userClaims.ToList());
             var refreshToken = _jwtService.GenerateRefreshToken();
 
             await _jwtService.SaveRefreshToken(request.Username, refreshToken);
@@ -67,7 +67,7 @@ namespace MonAPIDotNet.Controllers
                 return Unauthorized();
 
             var userClaims = await _userManager.GetClaimsAsync(user);
-            var token = _jwtService.GenerateJwtToken(user.UserName!, "API_App", userClaims.ToList());
+            var token = _jwtService.GenerateJwtToken(user.Id, "API_App", userClaims.ToList());
             var newRefreshToken = _jwtService.GenerateRefreshToken();
 
             // Revoke old refresh token
@@ -114,7 +114,7 @@ namespace MonAPIDotNet.Controllers
             
             // Générer un token et le retourner
             var userClaims = await _userManager.GetClaimsAsync(user);
-            var token = _jwtService.GenerateJwtToken(user.UserName, "API_App", userClaims.ToList());
+            var token = _jwtService.GenerateJwtToken(user.Id, "API_App", userClaims.ToList());
             var refreshToken = _jwtService.GenerateRefreshToken();
             
             await _jwtService.SaveRefreshToken(request.Username, refreshToken);

@@ -2,6 +2,7 @@ using MonAPIDotNet.DTOs;
 using MonAPIDotNet.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 
 namespace MonAPIDotNet.Controllers
@@ -67,12 +68,12 @@ namespace MonAPIDotNet.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<QuizDTO>> CreateQuizAsync([FromBody] QuizDTO dto)
         {
-            var authorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var authorId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             if (string.IsNullOrEmpty(authorId))
                 return Unauthorized();
 
             var quiz = await _quizService.CreateQuizAsync(dto, authorId);
-            return CreatedAtAction(nameof(GetQuizByIdAsync), new { id = quiz.Id }, quiz);
+            return CreatedAtAction("GetQuizById", new { id = quiz.Id }, quiz);
         }
 
         // PATCH /api/quiz/{id}
@@ -93,7 +94,7 @@ namespace MonAPIDotNet.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<QuizDTO>> UpdateQuizAsync(int id, [FromBody] QuizDTO dto)
         {
-            var authorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var authorId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             if (string.IsNullOrEmpty(authorId))
                 return Unauthorized();
 
@@ -120,7 +121,7 @@ namespace MonAPIDotNet.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteQuizAsync(int id)
         {
-            var authorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var authorId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             if (string.IsNullOrEmpty(authorId))
                 return Unauthorized();
 
