@@ -365,3 +365,5 @@ FodyWeavers.xsd
 Keys/
 
 appsettings.Development.json
+MonAPIDotNet/Migrations/20260320084641_AddQuizEntities.Designer.cs
+MonAPIDotNet/Migrations/20260320084641_AddQuizEntities.cs
