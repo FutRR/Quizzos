@@ -61,10 +61,12 @@ namespace MonAPIDotNet.Controllers
         /// <returns>Le quiz créé avec les données fournies et l'ID de l'auteur.</returns>
         /// <response code="201">Le quiz créé avec les données fournies et l'ID de l'auteur.</response>
         /// <response code="400">Requête invalide. Les données du quiz sont manquantes ou invalides.</response>
+        /// <response code="401">Non autorisé. L'utilisateur doit être authentifié pour créer un quiz.</response>
         [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(QuizDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<QuizDTO>> CreateQuizAsync([FromBody] QuizDTO dto)
         {
             var authorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
