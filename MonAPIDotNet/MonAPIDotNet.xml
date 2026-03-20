@@ -4,6 +4,53 @@
         <name>MonAPIDotNet</name>
     </assembly>
     <members>
+        <member name="M:MonAPIDotNet.Controllers.QuizController.GetAllQuizzesAsync(System.Int32,System.Int32)">
+            <summary>
+            Récupère la liste de tous les quiz avec leurs questions, réponses, images et tags.
+            </summary>
+            <param name="page">Le numéro de page (optionnel, par défaut à 1).</param>
+            <param name="pageSize">Le nombre de quiz par page (optionnel, par défaut à 20, maximum 100).</param>
+            <returns>La liste de tous les quiz avec leurs questions, réponses, images et tags.</returns>
+            <response code="200">La liste de tous les quiz avec leurs questions, réponses, images et tags.</response>
+        </member>
+        <member name="M:MonAPIDotNet.Controllers.QuizController.GetQuizByIdAsync(System.Int32)">
+            <summary>
+            Récupère un quiz par son ID, avec ses questions, réponses, images et tags.
+            </summary>
+            <param name="id">L'ID du quiz à récupérer.</param>
+            <returns>Le quiz correspondant à l'ID fourni, avec ses questions, réponses, images et tags.</returns>
+            <response code="200">Le quiz correspondant à l'ID fourni, avec ses questions, réponses, images et tags.</response>
+            <response code="404">Non trouvé. Aucun quiz ne correspond à l'ID fourni.</response>
+        </member>
+        <member name="M:MonAPIDotNet.Controllers.QuizController.CreateQuizAsync(MonAPIDotNet.DTOs.QuizDTO)">
+            <summary>
+            Crée un nouveau quiz avec les données fournies et l'ID de l'auteur.
+            </summary>
+            <param name="dto">Les données du quiz à créer.</param>
+            <returns>Le quiz créé avec les données fournies et l'ID de l'auteur.</returns>
+            <response code="201">Le quiz créé avec les données fournies et l'ID de l'auteur.</response>
+            <response code="400">Requête invalide. Les données du quiz sont manquantes ou invalides.</response>
+        </member>
+        <member name="M:MonAPIDotNet.Controllers.QuizController.UpdateQuizAsync(System.Int32,MonAPIDotNet.DTOs.QuizDTO)">
+            <summary>
+            Met à jour un quiz existant avec les données fournies.
+            </summary>
+            <param name="id">L'ID du quiz à mettre à jour.</param>
+            <param name="dto">Les données du quiz à mettre à jour.</param>
+            <returns>Le quiz mis à jour avec les données fournies.</returns>
+            <response code="200">Le quiz mis à jour avec les données fournies.</response>
+            <response code="400">Requête invalide. Les données du quiz sont manquantes ou invalides.</response>
+            <response code="404">Non trouvé. Aucun quiz ne correspond à l'ID fourni.</response>
+        </member>
+        <member name="M:MonAPIDotNet.Controllers.QuizController.DeleteQuizAsync(System.Int32)">
+            <summary>
+            Supprime un quiz existant par son ID.
+            </summary>
+            <param name="id">L'ID du quiz à supprimer.</param>
+            <returns>Aucun contenu.</returns>
+            <response code="204">Aucun contenu. Le quiz a été supprimé avec succès.</response>
+            <response code="404">Non trouvé. Aucun quiz ne correspond à l'ID fourni.</response>
+        </member>
         <member name="M:MonAPIDotNet.Controllers.UserController.GetAllUsers">
             <summary>
             Récupère la liste de tous les utilisateurs avec leurs profils publics.
