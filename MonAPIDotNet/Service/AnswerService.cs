@@ -22,6 +22,30 @@ namespace MonAPIDotNet.Service
             _context = context;
         }
 
+        public async Task<List<AnswerDTO>> GetAllAnswersAsync(int page = 1, int pageSize = 20)
+        {
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 20;
+            if (pageSize > 100) pageSize = 100;
+
+            var answers = await _context.Answers
+                .OrderBy(a => a.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return answers.Select(MapToDto).ToList();
+        }
+
+        public async Task<AnswerDTO> GetAnswerByIdAsync(int id)
+        {
+            var answer = await _context.Answers.FindAsync(id);
+            if (answer == null)
+                throw new NotFoundException("Answer", id);
+
+            return MapToDto(answer);
+        }
+
         public async Task<AnswerDTO> CreateAnswerAsync(AnswerDTO dto, int questionId)
         {
             var questionExists = await _context.Questions.AnyAsync(q => q.Id == questionId);
@@ -98,30 +122,6 @@ namespace MonAPIDotNet.Service
             }
 
             return true;
-        }
-
-        public async Task<List<AnswerDTO>> GetAllAnswersAsync(int page = 1, int pageSize = 20)
-        {
-            if (page < 1) page = 1;
-            if (pageSize < 1) pageSize = 20;
-            if (pageSize > 100) pageSize = 100;
-
-            var answers = await _context.Answers
-                .OrderBy(a => a.Id)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return answers.Select(MapToDto).ToList();
-        }
-
-        public async Task<AnswerDTO> GetAnswerByIdAsync(int id)
-        {
-            var answer = await _context.Answers.FindAsync(id);
-            if (answer == null)
-                throw new NotFoundException("Answer", id);
-
-            return MapToDto(answer);
         }
 
         private static AnswerDTO MapToDto(Answer answer)

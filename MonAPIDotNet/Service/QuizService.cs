@@ -24,73 +24,6 @@ namespace MonAPIDotNet.Service
         {
             _context = context;
         }
-        
-        public async Task<QuizDTO> CreateQuizAsync(QuizDTO dto, string authorId)
-        {
-            var quiz = new Quiz
-            {
-                Title = dto.Title,
-                Description = dto.Description,
-                Difficulty = Enum.Parse<DifficultyType>(dto.Difficulty),
-                ImageUrl = dto.ImageUrl,
-                AuthorId = authorId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-            
-            _context.Quizzes.Add(quiz);
-            await _context.SaveChangesAsync();
-            
-            return new QuizDTO
-            {
-                Id = quiz.Id,
-                Title = quiz.Title,
-                Description = quiz.Description,
-                Difficulty = quiz.Difficulty.ToString(),
-                ImageUrl = quiz.ImageUrl,
-                AuthorId = quiz.AuthorId,
-                CreatedAt = quiz.CreatedAt,
-                UpdatedAt = quiz.UpdatedAt
-            };
-        }
-
-        public async Task<QuizDTO> UpdateQuizAsync(int id, QuizDTO dto)
-        {
-            var quiz = await _context.Quizzes.FindAsync(id);
-            if (quiz == null)
-                throw new NotFoundException("Quiz", id);
-            
-            quiz.Title = dto.Title;
-            quiz.Description = dto.Description;
-            quiz.Difficulty = Enum.Parse<DifficultyType>(dto.Difficulty);
-            quiz.ImageUrl = dto.ImageUrl;
-            quiz.UpdatedAt = DateTime.UtcNow;
-            
-            await _context.SaveChangesAsync();
-            
-            return new QuizDTO
-            {
-                Id = quiz.Id,
-                Title = quiz.Title,
-                Description = quiz.Description,
-                Difficulty = quiz.Difficulty.ToString(),
-                ImageUrl = quiz.ImageUrl,
-                AuthorId = quiz.AuthorId,
-                CreatedAt = quiz.CreatedAt,
-                UpdatedAt = quiz.UpdatedAt
-            };
-        }
-
-        public async Task<bool> DeleteQuizAsync(int id)
-        {
-            var quiz = await _context.Quizzes.FindAsync(id);
-            if (quiz == null)
-                throw new NotFoundException("Quiz", id);
-            
-            _context.Quizzes.Remove(quiz);
-            await _context.SaveChangesAsync();
-            return true;
-        }
 
         public async Task<List<QuizDTO>> GetAllQuizzesAsync(int page = 1, int pageSize = 20)
         {
@@ -154,12 +87,12 @@ namespace MonAPIDotNet.Service
                 .Include(q => q.Questions)
                     .ThenInclude(q => q.Answers)
                 .Include(q => q.QuizTags)
-                    .ThenInclude(qt => qt.Tag)  
+                    .ThenInclude(qt => qt.Tag)
                 .FirstOrDefaultAsync(q => q.Id == id);
 
             if (quiz == null)
                 throw new NotFoundException("Quiz", id);
-            
+
             return new QuizDTO
             {
                 Id = quiz.Id,
@@ -192,6 +125,73 @@ namespace MonAPIDotNet.Service
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt
             };
+        }
+
+        public async Task<QuizDTO> CreateQuizAsync(QuizDTO dto, string authorId)
+        {
+            var quiz = new Quiz
+            {
+                Title = dto.Title,
+                Description = dto.Description,
+                Difficulty = Enum.Parse<DifficultyType>(dto.Difficulty),
+                ImageUrl = dto.ImageUrl,
+                AuthorId = authorId,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.Quizzes.Add(quiz);
+            await _context.SaveChangesAsync();
+
+            return new QuizDTO
+            {
+                Id = quiz.Id,
+                Title = quiz.Title,
+                Description = quiz.Description,
+                Difficulty = quiz.Difficulty.ToString(),
+                ImageUrl = quiz.ImageUrl,
+                AuthorId = quiz.AuthorId,
+                CreatedAt = quiz.CreatedAt,
+                UpdatedAt = quiz.UpdatedAt
+            };
+        }
+
+        public async Task<QuizDTO> UpdateQuizAsync(int id, QuizDTO dto)
+        {
+            var quiz = await _context.Quizzes.FindAsync(id);
+            if (quiz == null)
+                throw new NotFoundException("Quiz", id);
+
+            quiz.Title = dto.Title;
+            quiz.Description = dto.Description;
+            quiz.Difficulty = Enum.Parse<DifficultyType>(dto.Difficulty);
+            quiz.ImageUrl = dto.ImageUrl;
+            quiz.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return new QuizDTO
+            {
+                Id = quiz.Id,
+                Title = quiz.Title,
+                Description = quiz.Description,
+                Difficulty = quiz.Difficulty.ToString(),
+                ImageUrl = quiz.ImageUrl,
+                AuthorId = quiz.AuthorId,
+                CreatedAt = quiz.CreatedAt,
+                UpdatedAt = quiz.UpdatedAt
+            };
+        }
+
+        public async Task<bool> DeleteQuizAsync(int id)
+        {
+            var quiz = await _context.Quizzes.FindAsync(id);
+            if (quiz == null)
+                throw new NotFoundException("Quiz", id);
+
+            _context.Quizzes.Remove(quiz);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 
