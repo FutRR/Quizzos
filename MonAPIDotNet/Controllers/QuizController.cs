@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MonAPIDotNet.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class QuizController : ControllerBase
     {
         private readonly IQuizService _quizService;
@@ -29,10 +31,6 @@ namespace MonAPIDotNet.Controllers
         public async Task<ActionResult<List<QuizDTO>>> GetAllQuizzesAsync(int page = 1, int pageSize = 20)
         {
             var quizzes = await _quizService.GetAllQuizzesAsync(page, pageSize);
-            if (quizzes == null || quizzes.Count == 0)
-            {
-                return NotFound();
-            }
             return Ok(quizzes);
         }
 
@@ -51,13 +49,10 @@ namespace MonAPIDotNet.Controllers
         public async Task<ActionResult<QuizDTO>> GetQuizByIdAsync(int id)
         {
             var quiz = await _quizService.GetQuizByIdAsync(id);
-            if (quiz == null)
-                return NotFound();
-
             return Ok(quiz);
         }
 
-        // POST /api/quiz/new
+        // POST /api/quiz
 
         /// <summary>
         /// Crée un nouveau quiz avec les données fournies et l'ID de l'auteur.
@@ -67,18 +62,14 @@ namespace MonAPIDotNet.Controllers
         /// <response code="201">Le quiz créé avec les données fournies et l'ID de l'auteur.</response>
         /// <response code="400">Requête invalide. Les données du quiz sont manquantes ou invalides.</response>
         [Authorize]
-        [HttpPost("new")]
+        [HttpPost]
         [ProducesResponseType(typeof(QuizDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<QuizDTO>> CreateQuizAsync([FromBody] QuizDTO dto)
         {
             var authorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (dto == null || string.IsNullOrEmpty(authorId))
-                return BadRequest("Quiz data and author ID are required.");
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (string.IsNullOrEmpty(authorId))
+                return Unauthorized();
 
             var quiz = await _quizService.CreateQuizAsync(dto, authorId);
             return CreatedAtAction(nameof(GetQuizByIdAsync), new { id = quiz.Id }, quiz);
@@ -102,16 +93,15 @@ namespace MonAPIDotNet.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<QuizDTO>> UpdateQuizAsync(int id, [FromBody] QuizDTO dto)
         {
-            if (dto == null)
-                return BadRequest("Quiz data is required.");
+            var authorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(authorId))
+                return Unauthorized();
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var existingQuiz = await _quizService.GetQuizByIdAsync(id);
+            if (existingQuiz.AuthorId != authorId)
+                return Forbid();
 
             var updatedQuiz = await _quizService.UpdateQuizAsync(id, dto);
-            if (updatedQuiz == null)
-                return NotFound();
-
             return Ok(updatedQuiz);
         }
 
@@ -130,10 +120,15 @@ namespace MonAPIDotNet.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteQuizAsync(int id)
         {
-            var success = await _quizService.DeleteQuizAsync(id);
-            if (!success)
-                return NotFound();
+            var authorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(authorId))
+                return Unauthorized();
 
+            var existingQuiz = await _quizService.GetQuizByIdAsync(id);
+            if (existingQuiz.AuthorId != authorId)
+                return Forbid();
+
+            await _quizService.DeleteQuizAsync(id);
             return NoContent();
         }
     }

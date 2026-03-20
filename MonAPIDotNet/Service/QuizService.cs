@@ -10,7 +10,7 @@ namespace MonAPIDotNet.Service
     {
         Task<QuizDTO> CreateQuizAsync(QuizDTO dto, string authorId);
         Task<QuizDTO> UpdateQuizAsync(int id, QuizDTO dto);
-        Task<bool> DeleteQuizAsync(int id);
+        Task DeleteQuizAsync(int id);
 
         Task<List<QuizDTO>> GetAllQuizzesAsync(int page = 1, int pageSize = 20);
         Task<QuizDTO> GetQuizByIdAsync(int id);
@@ -183,7 +183,7 @@ namespace MonAPIDotNet.Service
             };
         }
 
-        public async Task<bool> DeleteQuizAsync(int id)
+        public async Task DeleteQuizAsync(int id)
         {
             var quiz = await _context.Quizzes.FindAsync(id);
             if (quiz == null)
@@ -191,7 +191,6 @@ namespace MonAPIDotNet.Service
 
             _context.Quizzes.Remove(quiz);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 
