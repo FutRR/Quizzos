@@ -22,7 +22,7 @@
             <response code="200">Le quiz correspondant à l'ID fourni, avec ses questions, réponses, images et tags.</response>
             <response code="404">Non trouvé. Aucun quiz ne correspond à l'ID fourni.</response>
         </member>
-        <member name="M:MonAPIDotNet.Controllers.QuizController.CreateQuizAsync(MonAPIDotNet.DTOs.QuizDTO)">
+        <member name="M:MonAPIDotNet.Controllers.QuizController.CreateQuizAsync(MonAPIDotNet.DTOs.CreateQuizDTO)">
             <summary>
             Crée un nouveau quiz avec les données fournies et l'ID de l'auteur.
             </summary>

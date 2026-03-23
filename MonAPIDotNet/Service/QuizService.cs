@@ -8,7 +8,7 @@ namespace MonAPIDotNet.Service
 
     public interface IQuizService
     {
-        Task<QuizDTO> CreateQuizAsync(QuizDTO dto, string authorId);
+        Task<QuizDTO> CreateQuizAsync(CreateQuizDTO dto, string authorId);
         Task<QuizDTO> UpdateQuizAsync(int id, QuizDTO dto);
         Task DeleteQuizAsync(int id);
 
@@ -127,7 +127,7 @@ namespace MonAPIDotNet.Service
             };
         }
 
-        public async Task<QuizDTO> CreateQuizAsync(QuizDTO dto, string authorId)
+        public async Task<QuizDTO> CreateQuizAsync(CreateQuizDTO dto, string authorId)
         {
             var quiz = new Quiz
             {

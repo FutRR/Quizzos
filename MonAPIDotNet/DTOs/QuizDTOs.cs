@@ -15,4 +15,11 @@ namespace MonAPIDotNet.DTOs
         public List<int> TagIds { get; set; } = new List<int>();
     }
 
+    public class CreateQuizDTO
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Difficulty { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
+    }
 }

@@ -68,7 +68,7 @@ namespace MonAPIDotNet.Controllers
         [ProducesResponseType(typeof(QuizDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<QuizDTO>> CreateQuizAsync([FromBody] QuizDTO dto)
+        public async Task<ActionResult<QuizDTO>> CreateQuizAsync([FromBody] CreateQuizDTO dto)
         {
             var authorId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             if (string.IsNullOrEmpty(authorId))
