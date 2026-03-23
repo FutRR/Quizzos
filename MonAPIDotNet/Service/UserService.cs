@@ -70,11 +70,11 @@ namespace MonAPIDotNet.Service
                 };
             }
 
-            public async Task<PrivateUserProfileDTO> GetMyProfileAsync(string username)
+            public async Task<PrivateUserProfileDTO> GetMyProfileAsync(string userId)
             {
                 var user = await _context.Users
                     .Include(u => u.UserProfile)
-                    .FirstOrDefaultAsync(u => u.UserName == username);
+                    .FirstOrDefaultAsync(u => u.Id == userId);
 
                 if (user == null || user.UserProfile == null)
                     return null!;
