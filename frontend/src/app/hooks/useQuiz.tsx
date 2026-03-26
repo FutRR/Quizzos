@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { QuizService } from "../services/quizService";
 
 export function useQuiz() {
@@ -7,6 +7,7 @@ export function useQuiz() {
     const [error, setError] = useState<string | null>(null);
     
     const quizService = new QuizService();
+
     
     const getQuizzes = async () => {
         setLoading(true);
@@ -19,7 +20,11 @@ export function useQuiz() {
             setLoading(false);
         }
     };
-
+    
+    useEffect(() => {
+        getQuizzes();
+    }, []);
+    
     const createQuiz = useCallback(async (data: any) => {
         try {
             setLoading(true);
@@ -48,7 +53,7 @@ export function useQuiz() {
         setLoading(false);
     }
 }, []);
-    
+
     return {
         quizzes,
         loading,
