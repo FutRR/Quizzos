@@ -17,7 +17,7 @@ export default function CreateQuizz() {
   const [imageUrl, setImageUrl] = useState("");
 
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const newQuiz = await createQuiz({
