@@ -14,6 +14,7 @@ namespace MonAPIDotNet.Service
 
         Task<List<QuizDTO>> GetAllQuizzesAsync(int page = 1, int pageSize = 20);
         Task<QuizDTO> GetQuizByIdAsync(int id);
+        Task<List<QuizDTO>> GetQuizzesByAuthorNameAsync(string authorName, int page = 1, int pageSize = 20);
     }
 
     public class QuizService : IQuizService
@@ -125,6 +126,60 @@ namespace MonAPIDotNet.Service
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt
             };
+        }
+
+        public async Task<List<QuizDTO>> GetQuizzesByAuthorNameAsync(string authorName, int page = 1, int pageSize = 20)
+        {
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 20;
+            if (pageSize > 100) pageSize = 100;
+
+            var quizzes = await _context.Quizzes
+                .Where(q => q.Author.UserName == authorName)
+                .Include(q => q.Author)
+                .Include(q => q.Questions)
+                    .ThenInclude(q => q.Images)
+                .Include(q => q.Questions)
+                    .ThenInclude(q => q.Answers)
+                .Include(q => q.QuizTags)
+                    .ThenInclude(qt => qt.Tag)
+                .OrderBy(q => q.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return quizzes.Select(q => new QuizDTO
+            {
+                Id = q.Id,
+                Title = q.Title,
+                Description = q.Description ?? string.Empty,
+                Difficulty = q.Difficulty.ToString(),
+                ImageUrl = q.ImageUrl,
+                AuthorId = q.AuthorId,
+                AuthorName = q.Author?.UserName ?? string.Empty,
+                CreatedAt = q.CreatedAt,
+                UpdatedAt = q.UpdatedAt,
+                Questions = q.Questions.Select(question => new QuestionDTO
+                {
+                    Id = question.Id,
+                    Text = question.Text,
+                    Type = question.Type.ToString(),
+                    IsTimed = question.IsTimed,
+                    TimeLimit = question.TimeLimit,
+                    CreatedAt = question.CreatedAt,
+                    UpdatedAt = question.UpdatedAt,
+                    QuizId = question.QuizId,
+                    ImagesUrls = question.Images.Select(qi => qi.Url).ToList(),
+                    Answers = question.Answers.Select(answer => new AnswerDTO
+                    {
+                        Id = answer.Id,
+                        Value = answer.Value,
+                        IsCorrect = answer.IsCorrect,
+                        QuestionId = answer.QuestionId
+                    }).ToList()
+                }).ToList(),
+                TagIds = q.QuizTags.Select(qt => qt.TagId).ToList()
+            }).ToList();
         }
 
         public async Task<QuizDTO> CreateQuizAsync(CreateQuizDTO dto, string authorId)

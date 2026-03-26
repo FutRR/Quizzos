@@ -5,17 +5,22 @@ import { useParams } from "next/navigation";
 import { BaseUser } from "@/app/types/userTypes";
 import userService from "@/app/services/userService";
 import { useJsonPlaceholder } from "@/app/hooks/useJsonPlaceholder";
+import { useQuiz } from "@/app/hooks/useQuiz";
 
 export default function UserProfile() {
   const { images } = useJsonPlaceholder();
   const params = useParams<{ username: string }>();
   const username = params.username;
   const [profile, setProfile] = useState<BaseUser | null>(null);
+  const { getQuizzesByAuthorName, quizzes } = useQuiz();
 
   useEffect(() => {
     const loadProfile = async () => {
       const profileData = await userService.getUserProfile(username);
       setProfile(profileData);
+      if (profileData) {
+        await getQuizzesByAuthorName(profileData.userName || "");
+      }
     };
     loadProfile();
   }, [username]);
@@ -26,6 +31,7 @@ export default function UserProfile() {
       : "",
     imageAlt: images?.[0]?.title || "Avatar de l'utilisateur",
   };
+  console.log("Quizzes de l'auteur:", quizzes);
   return (
     <div>
       {profile ? (
@@ -44,7 +50,7 @@ export default function UserProfile() {
           <div className="mb-6 text-left">
             <h2 className="text-lg font-semibold mb-1">Stats:</h2>
             <p>Quiz joués: {/*profile.stats.gamesPlayed*/}</p>
-            <p>Quiz créés: {/*profile.stats.gamesCreated*/}</p>
+            <p>Quiz créés: {quizzes.length}</p>
             <p>Score Général: {/*profile.stats.totalScore*/}</p>
             <p>Tags favoris: {/*profile.stats.favoriteTags*/}</p>
           </div>

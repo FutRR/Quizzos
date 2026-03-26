@@ -15,97 +15,97 @@ namespace MonAPIDotNet.Service
     }
     public class UserService : IUserService
     {
-            private readonly MyDbContext _context;
-            private readonly UserManager<ApplicationUser> _userManager;
-            public UserService(MyDbContext context, UserManager<ApplicationUser> userManager)
-            {
-                _context = context;
-                _userManager = userManager;
-            }
-            public async Task<List<UserProfileDTO>> GetAllUsersAsync()
-            {
-                return await _context.Users
-                    .Include(u => u.UserProfile)
-                    .Where(u => u.UserProfile != null)
-                    .Select(u => new UserProfileDTO
-                    {
-                        UserName = u.UserName!,
-                        AvatarUrl = u.UserProfile!.AvatarUrl,
-                        CreatedAt = u.UserProfile.CreatedAt
-                    })
-                    .ToListAsync();
-            }
-
-            public async Task<UserProfileDTO> GetUserByIdAsync(string id)
-            {
-                var user = await _context.Users
-                    .Include(u => u.UserProfile)
-                    .FirstOrDefaultAsync(u => u.Id == id);
-
-                if (user == null || user.UserProfile == null)
-                    return null!;
-
-                return new UserProfileDTO
+        private readonly MyDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public UserService(MyDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+        public async Task<List<UserProfileDTO>> GetAllUsersAsync()
+        {
+            return await _context.Users
+                .Include(u => u.UserProfile)
+                .Where(u => u.UserProfile != null)
+                .Select(u => new UserProfileDTO
                 {
-                    UserName = user.UserName!,
-                    AvatarUrl = user.UserProfile.AvatarUrl,
-                    CreatedAt = user.UserProfile.CreatedAt
-                };
-            }
+                    UserName = u.UserName!,
+                    AvatarUrl = u.UserProfile!.AvatarUrl,
+                    CreatedAt = u.UserProfile.CreatedAt
+                })
+                .ToListAsync();
+        }
 
-            public async Task<UserProfileDTO> GetUserByUsernameAsync(string username)
+        public async Task<UserProfileDTO> GetUserByIdAsync(string id)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserProfile)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null || user.UserProfile == null)
+                return null!;
+
+            return new UserProfileDTO
             {
-                var user = await _context.Users
-                    .Include(u => u.UserProfile)
-                    .FirstOrDefaultAsync(u => u.UserName == username);
+                UserName = user.UserName!,
+                AvatarUrl = user.UserProfile.AvatarUrl,
+                CreatedAt = user.UserProfile.CreatedAt
+            };
+        }
 
-                if (user == null || user.UserProfile == null)
-                    return null!;
+        public async Task<UserProfileDTO> GetUserByUsernameAsync(string username)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserProfile)
+                .FirstOrDefaultAsync(u => u.UserName == username);
 
-                return new UserProfileDTO
-                {
-                    UserName = user.UserName!,
-                    AvatarUrl = user.UserProfile.AvatarUrl,
-                    CreatedAt = user.UserProfile.CreatedAt
-                };
-            }
+            if (user == null || user.UserProfile == null)
+                return null!;
 
-            public async Task<PrivateUserProfileDTO> GetMyProfileAsync(string userId)
+            return new UserProfileDTO
             {
-                var user = await _context.Users
-                    .Include(u => u.UserProfile)
-                    .FirstOrDefaultAsync(u => u.Id == userId);
+                UserName = user.UserName!,
+                AvatarUrl = user.UserProfile.AvatarUrl,
+                CreatedAt = user.UserProfile.CreatedAt
+            };
+        }
 
-                if (user == null || user.UserProfile == null)
-                    return null!;
-                return new PrivateUserProfileDTO
-                {
-                    UserName = user.UserName!,
-                    AvatarUrl = user.UserProfile.AvatarUrl,
-                    CreatedAt = user.UserProfile.CreatedAt,
-                    Email = user.Email,
-                    IsEmailConfirmed = user.EmailConfirmed
-                };
-            }
+        public async Task<PrivateUserProfileDTO> GetMyProfileAsync(string userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserProfile)
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
-            public async Task<bool> UpdateUserAsync(string id, UserProfileDTO userDto)
+            if (user == null || user.UserProfile == null)
+                return null!;
+            return new PrivateUserProfileDTO
             {
-                var user = await _context.Users
-                    .Include(u => u.UserProfile)
-                    .FirstOrDefaultAsync(u => u.Id == id);
+                UserName = user.UserName!,
+                AvatarUrl = user.UserProfile.AvatarUrl,
+                CreatedAt = user.UserProfile.CreatedAt,
+                Email = user.Email,
+                IsEmailConfirmed = user.EmailConfirmed
+            };
+        }
 
-                if (user?.UserProfile == null)
-                    return false;
-                
-                // Mise à jour uniquement des champs fournis
-                if (userDto.AvatarUrl != null)
-                    user.UserProfile.AvatarUrl = userDto.AvatarUrl;
+        public async Task<bool> UpdateUserAsync(string id, UserProfileDTO userDto)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserProfile)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
-                _context.UserProfiles.Update(user.UserProfile);
+            if (user?.UserProfile == null)
+                return false;
 
-                await _context.SaveChangesAsync();
-                return true;
-            }
+            // Mise à jour uniquement des champs fournis
+            if (userDto.AvatarUrl != null)
+                user.UserProfile.AvatarUrl = userDto.AvatarUrl;
+
+            _context.UserProfiles.Update(user.UserProfile);
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
     }
 }

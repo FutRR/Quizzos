@@ -11,6 +11,11 @@ export class QuizService {
         const response = await fetchClient.get(`/quiz/${id}`);
         return response;
     }
+    // Get quizzes by author name
+    async getQuizzesByAuthorName(authorName: string): Promise<any> {
+        const response = await fetchClient.get(`/quiz/${authorName}/quizzes`);
+        return response;
+    }
     // Create quiz
     async createQuiz(data: any): Promise<any> {
         const response = await fetchClient.post("/quiz/new", data);
