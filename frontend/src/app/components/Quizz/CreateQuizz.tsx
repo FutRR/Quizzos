@@ -25,7 +25,7 @@ export default function CreateQuizz() {
         title,
         description,
         difficulty,
-        tagIds: selectedTags.map(tag => tag.id),
+        tagIds: selectedTags.map((tag) => tag.id),
         imageUrl,
       });
       if (newQuiz) {
@@ -65,13 +65,13 @@ export default function CreateQuizz() {
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
-          <TagInput 
+          <TagInput
             selectedTags={selectedTags}
             onTagsChange={setSelectedTags}
             maxTags={5}
             placeholder="Ajouter des tags..."
           />
-          <ImageUpload 
+          <ImageUpload
             onImageUploaded={setImageUrl}
             currentImageUrl={imageUrl}
           />
