@@ -10,7 +10,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { useQuiz } from "@/app/hooks/useQuiz";
 
 export default function MyProfilePage() {
-  const { user, logout, loading } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const { images } = useJsonPlaceholder();
   const [profile, setProfile] = useState<MyUserProfile | null>(null);
@@ -89,12 +89,6 @@ export default function MyProfilePage() {
       ) : (
         <p>Loading profile...</p>
       )}
-      <button
-        onClick={logout}
-        className="mt-5 inline-block rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-      >
-        Déconnexion
-      </button>
     </div>
   );
 }
