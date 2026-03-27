@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Tag } from "@/types/tagTypes";
-import TagService from "@/services/tagService";
+import { Tag } from "@/app/types/tagTypes";
+import { tagService } from "@/app/services/tagService";
 import TagBadge from "./TagBadge";
 
 interface TagInputProps {
@@ -30,7 +30,7 @@ export default function TagInput({
     useEffect(() => {
         const loadTags = async () => {
             try {
-                const tags = await TagService.getAllTags();
+                const tags = await tagService.getAllTags();
                 setAllTags(tags);
             } catch (error) {
                 console.error("Error loading tags:", error);
@@ -83,7 +83,7 @@ export default function TagInput({
         
         setIsLoading(true);
         try {
-            const newTag = await TagService.createTag({ 
+            const newTag = await tagService.createTag({ 
                 name: query.trim().toLowerCase(),
                 color: getRandomColor()
             });

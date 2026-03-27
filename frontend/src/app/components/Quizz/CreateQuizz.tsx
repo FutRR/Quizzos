@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useQuiz } from "@/app/hooks/useQuiz";
 import { useRouter } from "next/navigation";
+import TagInput from "../Tag/TagInput";
 import ImageUpload from "../Images/ImageUpload";
+import { Tag } from "@/app/types/tagTypes";
 
 export default function CreateQuizz() {
   const router = useRouter();
@@ -13,6 +15,7 @@ export default function CreateQuizz() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("");
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [imageUrl, setImageUrl] = useState("");
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -22,6 +25,7 @@ export default function CreateQuizz() {
         title,
         description,
         difficulty,
+        tagIds: selectedTags.map((tag) => tag.id),
         imageUrl,
       });
       if (newQuiz) {
@@ -51,6 +55,7 @@ export default function CreateQuizz() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+
           <select
             value={difficulty}
             onChange={(e) => setDifficulty(e.target.value)}
@@ -60,6 +65,12 @@ export default function CreateQuizz() {
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
+          <TagInput
+            selectedTags={selectedTags}
+            onTagsChange={setSelectedTags}
+            maxTags={5}
+            placeholder="Ajouter des tags..."
+          />
           <ImageUpload
             onImageUploaded={setImageUrl}
             currentImageUrl={imageUrl}
