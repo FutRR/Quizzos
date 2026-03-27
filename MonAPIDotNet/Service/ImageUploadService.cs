@@ -42,7 +42,13 @@ namespace MonAPIDotNet.Service
             {
                 File = new FileDescription(file.FileName, stream),
                 Folder = "quiz-images",
-                Transformation = new Transformation().Width(800).Height(600).Crop("limit")
+                Format = "webp",
+                Transformation = new Transformation()
+                    .Width(800)
+                    .Height(600)
+                    .Crop("limit")
+                    .Quality("auto:good")
+                    .FetchFormat("auto")
             };
 
             var result = await _cloudinary.UploadAsync(uploadParams);
