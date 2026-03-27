@@ -1,5 +1,6 @@
 import { useQuiz } from "@/app/hooks/useQuiz";
 import Link from "next/link";
+import { TagBadge } from "../Tag";
 
 export default function GetAllQuizzes() {
   const { quizzes, loading, error } = useQuiz();
@@ -12,6 +13,13 @@ export default function GetAllQuizzes() {
           <h2>{quiz.title}</h2>
           <p>{quiz.description}</p>
           <Link href={`/quizzes/${quiz.id}`}>Voir le quiz</Link>
+          {quiz.tags && quiz.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-3">
+              {quiz.tags.map((tag: any) => (
+                <TagBadge key={tag.id} tag={tag} />
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </>

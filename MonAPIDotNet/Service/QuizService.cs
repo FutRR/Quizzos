@@ -56,6 +56,12 @@ namespace MonAPIDotNet.Service
                 AuthorName = q.Author?.UserName ?? string.Empty,
                 CreatedAt = q.CreatedAt,
                 UpdatedAt = q.UpdatedAt,
+                Tags = q.QuizTags.Select(qt => new TagDto
+                { 
+                    Id = qt.Tag.Id, 
+                    Name = qt.Tag.Name, 
+                    Color = qt.Tag.Color 
+                }).ToList(),
                 Questions = q.Questions.Select(question => new QuestionDTO
                 {
                     Id = question.Id,
@@ -192,7 +198,8 @@ namespace MonAPIDotNet.Service
                 ImageUrl = dto.ImageUrl,
                 AuthorId = authorId,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                QuizTags = dto.TagIds.Select(tagId => new QuizTag { TagId = tagId }).ToList()
             };
 
             _context.Quizzes.Add(quiz);
@@ -207,7 +214,8 @@ namespace MonAPIDotNet.Service
                 ImageUrl = quiz.ImageUrl,
                 AuthorId = quiz.AuthorId,
                 CreatedAt = quiz.CreatedAt,
-                UpdatedAt = quiz.UpdatedAt
+                UpdatedAt = quiz.UpdatedAt,
+                TagIds = quiz.QuizTags.Select(qt => qt.TagId).ToList()
             };
         }
 
@@ -234,7 +242,8 @@ namespace MonAPIDotNet.Service
                 ImageUrl = quiz.ImageUrl,
                 AuthorId = quiz.AuthorId,
                 CreatedAt = quiz.CreatedAt,
-                UpdatedAt = quiz.UpdatedAt
+                UpdatedAt = quiz.UpdatedAt,
+                TagIds = quiz.QuizTags.Select(qt => qt.TagId).ToList()
             };
         }
 

@@ -13,6 +13,7 @@ namespace MonAPIDotNet.DTOs
         public DateTime? UpdatedAt { get; set; }
         public List<QuestionDTO> Questions { get; set; } = new List<QuestionDTO>();
         public List<int> TagIds { get; set; } = new List<int>();
+        public List<TagDto> Tags { get; set; } = new List<TagDto>();
     }
 
     public class CreateQuizDTO
@@ -21,5 +22,6 @@ namespace MonAPIDotNet.DTOs
         public string Description { get; set; } = string.Empty;
         public string Difficulty { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
+        public List<int> TagIds { get; set; } = new List<int>();
     }
 }

@@ -1,7 +1,7 @@
 import { Tag, CreateTagData } from "../types/tagTypes";
 import fetchClient from "../lib/fetchClient";
 
-class TagService {
+export class TagService {
     async getAllTags(): Promise<Tag[]> {
         return fetchClient.get<Tag[]>("/tag");
     }
@@ -23,4 +23,4 @@ class TagService {
     }
 }
 
-export default new TagService();
+export const tagService = new TagService();
