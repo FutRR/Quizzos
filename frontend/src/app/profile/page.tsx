@@ -32,7 +32,7 @@ export default function Profile() {
         >
           Edit
         </button>
-        <ProfileStats />
+        {!loading && user && <ProfileStats username={user.userName} />}
       </div>
       {!loading && user && <GetUserQuizzes authorName={user.userName} />}
     </div>

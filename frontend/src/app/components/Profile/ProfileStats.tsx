@@ -5,25 +5,30 @@ import { useQuiz } from "@/app/hooks/useQuiz";
 import { useEffect, useState } from "react";
 import { BaseUser } from "@/app/types/userTypes";
 import { useAuth } from "@/app/hooks/useAuth";
-import { useParams } from "next/navigation";
 
-export default function ProfileStats() {
-  const params = useParams<{ username: string }>();
-  const username = params.username;
+interface ProfileStatsProps {
+  username: string;
+}
+
+export default function ProfileStats({ username }: ProfileStatsProps) {
   const { user } = useAuth();
   const [profile, setProfile] = useState<BaseUser | null>(null);
   const { getQuizzesByAuthorName, quizzes } = useQuiz();
 
-  useEffect(() => {
+ useEffect(() => {
     const loadProfile = async () => {
-      const profileData = await userService.getUserProfile(username);
+      // Utiliser le username passé en prop, sinon celui de l'utilisateur connecté
+      const targetUsername = username || user?.userName;
+      if (!targetUsername) return;
+      
+      const profileData = await userService.getUserProfile(targetUsername);
       setProfile(profileData);
       if (profileData) {
         await getQuizzesByAuthorName(profileData.userName || "");
       }
     };
     loadProfile();
-  }, []);
+  }, [username, user]);
 
   return (
     <div>
