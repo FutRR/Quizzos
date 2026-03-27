@@ -3,6 +3,7 @@
 import { useQuiz } from "@/app/hooks/useQuiz";
 import Link from "next/dist/client/link";
 import { useEffect, useState } from "react";
+import { TagBadge } from "../Tag";
 
 interface GetUserQuizzesProps {
   authorName: string;
@@ -15,6 +16,7 @@ export default function GetUserQuizzes({ authorName }: GetUserQuizzesProps) {
   useEffect(() => {
     const fetchUserQuizzes = async () => {
       const quizzes = await getQuizzesByAuthorName(authorName);
+      console.log("User quizzes data:", quizzes);
       setUserQuizzes(quizzes);
     };
 
@@ -31,6 +33,13 @@ export default function GetUserQuizzes({ authorName }: GetUserQuizzesProps) {
             <div className="border p-4 rounded-lg" key={quiz.id}>
               <h2>{quiz.title}</h2>
               <p>{quiz.description}</p>
+              {quiz.tags && quiz.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {quiz.tags.map((tag: any) => (
+                    <TagBadge key={tag.id} tag={tag} />
+                  ))}
+                </div>
+              )}
               <Link href={`/quizzes/${quiz.id}`}>Voir le quiz</Link>
             </div>
           ))
