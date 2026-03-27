@@ -13,7 +13,7 @@ export default async function PublicProfile({
     <div className="flex">
       <div>
         <UserProfileInfo />
-        <ProfileStats />
+        <ProfileStats username={username} />
       </div>
       {<GetUserQuizzes authorName={username} />}
     </div>
