@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQuiz } from "@/app/hooks/useQuiz";
 import { useRouter } from "next/navigation";
+import ImageUpload from "../Images/ImageUpload";
 
 export default function CreateQuizz() {
   const router = useRouter();
@@ -59,11 +60,9 @@ export default function CreateQuizz() {
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
+          <ImageUpload 
+            onImageUploaded={setImageUrl}
+            currentImageUrl={imageUrl}
           />
           <button type="submit">Create</button>
         </form>
