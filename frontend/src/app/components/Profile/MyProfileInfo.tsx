@@ -47,9 +47,9 @@ export default function MyProfilePage() {
       : "",
     imageAlt: images?.[0]?.title || "Avatar de l'utilisateur",
   };
+
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Mon Profil</h1>
       {profile ? (
         <div className="flex flex-col justify-end items-start text-center mb-4">
           <div className="flex">
@@ -77,13 +77,6 @@ export default function MyProfilePage() {
                 </p>
               </div>
             )}
-            <div className="mb-6 text-left">
-              <h2 className="text-lg font-semibold mb-1">Stats:</h2>
-              <p>Quiz joués: {/*profile.stats.gamesPlayed*/}</p>
-              <p>Quiz créés: {quizzes.length}</p>
-              <p>Score Général: {/*profile.stats.totalScore*/}</p>
-              <p>Tags favoris: {/*profile.stats.favoriteTags*/}</p>
-            </div>
           </div>
         </div>
       ) : (

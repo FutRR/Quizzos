@@ -1,12 +1,21 @@
-import UserProfile from "@/app/components/Profile/UserProfile";
+import ProfileStats from "@/app/components/Profile/ProfileStats";
+import UserProfileInfo from "@/app/components/Profile/UserProfileInfo";
 import GetUserQuizzes from "@/app/components/Quizz/GetUserQuizzes";
 
-export default async function PublicProfile({ params }: { params: Promise<{ username: string }> }) {
+export default async function PublicProfile({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
   const { username } = await params;
+
   return (
-    <div>
-      <UserProfile />
-      <GetUserQuizzes authorName={username} />
+    <div className="flex">
+      <div>
+        <UserProfileInfo />
+        <ProfileStats />
+      </div>
+      {<GetUserQuizzes authorName={username} />}
     </div>
   );
 }

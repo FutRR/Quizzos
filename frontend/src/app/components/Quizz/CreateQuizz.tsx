@@ -60,7 +60,7 @@ export default function CreateQuizz() {
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
-          <ImageUpload 
+          <ImageUpload
             onImageUploaded={setImageUrl}
             currentImageUrl={imageUrl}
           />
