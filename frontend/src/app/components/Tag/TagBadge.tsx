@@ -1,6 +1,6 @@
 "use client";
 
-import { Tag } from "@/types/tagTypes";
+import { Tag } from "@/app/types/tagTypes";
 
 interface TagBadgeProps {
     tag: Tag;
