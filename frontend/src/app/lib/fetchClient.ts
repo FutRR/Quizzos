@@ -77,14 +77,22 @@ class FetchClient {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
+
+    const csrfToken = typeof document !== "undefined"
+      ? document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("XSRF-TOKEN="))
+          ?.split("=")[1]
+      : undefined;
+
     // Ajouter le header CSRF si disponible
-    const csrfToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("XSRF-TOKEN="))
-      ?.split("=")[1];
-    if (csrfToken) {
-      headers["X-CSRF-Token"] = csrfToken;
-    }
+    // const csrfToken = document.cookie
+    //   .split("; ")
+    //   .find((row) => row.startsWith("XSRF-TOKEN="))
+    //   ?.split("=")[1];
+    // if (csrfToken) {
+    //   headers["X-CSRF-Token"] = csrfToken;
+    // }
     
 
     // Créer un AbortController pour le timeout
