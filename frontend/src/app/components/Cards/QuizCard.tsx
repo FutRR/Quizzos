@@ -5,7 +5,7 @@ interface QuizCardProps {
     title: string;
     description: string;
     authorName: string;
-    tags: string[];
+    tags: { id: number; name: string; color: string }[];
     image?: string;
     imageAlt?: string;
   };
@@ -47,12 +47,12 @@ export default function QuizCard({ quizData }: QuizCardProps) {
 
           {/* Tags en bas */}
           <div className="flex gap-2">
-            {quiz.tags.map((tag, index) => (
+            {quiz.tags.map((tag) => (
               <span
-                key={index}
+                key={tag.id}
                 className="px-3 py-1 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white border border-white/30"
               >
-                #{tag}
+                #{tag.name}
               </span>
             ))}
           </div>
