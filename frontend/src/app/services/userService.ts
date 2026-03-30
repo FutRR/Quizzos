@@ -27,8 +27,16 @@ class UserService {
     }
 
     async getUserProfile(username: string): Promise<BaseUser> {
-        const response = await fetchClient.get<BaseUser>(`/User/${username}`);
-        return response;
+        console.log("[UserService] getUserProfile() called with username:", username);
+        try {
+            console.log("[UserService] Making GET request to /User/" + username);
+            const response = await fetchClient.get<BaseUser>("/User/" + username);
+            console.log("[UserService] Response from /User/" + username + ":", response);
+            return response;
+        } catch (error) {
+            console.error("[UserService] Error in getUserProfile():", error);
+            throw error;
+        }
     }
     
     async getAllUsers(): Promise<BaseUser[]> {
