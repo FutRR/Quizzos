@@ -25,7 +25,7 @@ export default function GetUserQuizzes({ authorName }: GetUserQuizzesProps) {
 
   return (
     <div>
-      <h1>Quizzes by {authorName}</h1>
+      <h1>Quizzes by {authorName} :</h1>
       {loading && <p>Chargement...</p>}
       {error && <p>Erreur: {error}</p>}
       {userQuizzes && userQuizzes.length > 0

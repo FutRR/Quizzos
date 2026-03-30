@@ -15,8 +15,8 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex">
-      <div>
+    <div className="flex justify-between px-16 gap-8">
+      <div className="flex flex-col w-1/2">
         {!edit ? (
           <div>
             <ProfileInfo />
@@ -27,14 +27,18 @@ export default function Profile() {
           </div>
         )}
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 w-1/2 rounded"
           onClick={toggle}
         >
           Edit
         </button>
-        {!loading && user && <ProfileStats username={user.userName} />}
+        <div>
+          {!loading && user && <ProfileStats username={user.userName} />}
+        </div>
       </div>
-      {!loading && user && <GetUserQuizzes authorName={user.userName} />}
+      <div className="w-1/2">
+        {!loading && user && <GetUserQuizzes authorName={user.userName} />}
+      </div>
     </div>
   );
 }

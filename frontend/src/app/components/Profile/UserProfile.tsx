@@ -57,7 +57,7 @@ export default function UserProfile() {
         </div>
       ) : (
         <p>
-          Aucun utilisateur sous le nom de{" "}
+          Aucun utilisateur sous le nom de
           <span className="font-bold">{username}</span>
         </p>
       )}
