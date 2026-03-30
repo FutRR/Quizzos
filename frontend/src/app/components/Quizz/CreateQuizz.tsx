@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import TagInput from "../Tag/TagInput";
 import ImageUpload from "../Images/ImageUpload";
 import { Tag } from "@/app/types/tagTypes";
+import AddQuestionModal from "../Question/AddQuestionModal";
 
 export default function CreateQuizz() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export default function CreateQuizz() {
   const [difficulty, setDifficulty] = useState("");
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [imageUrl, setImageUrl] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [createdQuizId, setCreatedQuizId] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,10 +32,18 @@ export default function CreateQuizz() {
         imageUrl,
       });
       if (newQuiz) {
-        router.push(`/quizzes/${newQuiz.id}`);
+        setCreatedQuizId(newQuiz.id);
+        setShowModal(true);
       }
     } catch {
       // error is already set in useQuiz state
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    if (createdQuizId) {
+      router.push(`/quizzes/${createdQuizId}`);
     }
   };
 
@@ -78,6 +89,13 @@ export default function CreateQuizz() {
           <button type="submit">Create</button>
         </form>
       </div>
+      {createdQuizId && (
+        <AddQuestionModal
+          isOpen={showModal}
+          onClose={handleModalClose}
+          quizId={createdQuizId}
+        />
+      )}
     </>
   );
 }
