@@ -57,13 +57,6 @@ export default function QuizCard({ quizData }: QuizCardProps) {
           <div className="flex gap-2">
             {quiz.tags.map((tag) => (
               <TagBadge key={tag.id} tag={tag} size="md" />
-              // <span
-              //   style={{ backgroundColor: tag.color }}
-              //   key={tag.id}
-              //   className="px-3 py-1 rounded-full text-sm font-medium text-white border border-white/30"
-              // >
-              //   #{tag.name}
-              // </span>
             ))}
           </div>
         </div>
