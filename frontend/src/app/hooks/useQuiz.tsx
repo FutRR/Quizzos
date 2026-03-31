@@ -24,6 +24,23 @@ export function useQuiz() {
     getQuizzes();
   }, []);
 
+  // Add after getQuizzesByAuthorName (around line 71), before the return:
+
+const updateQuiz = useCallback(async (id: string, data: any) => {
+  try {
+    setLoading(true);
+    setError(null);
+    const response = await quizService.updateQuiz(id, data);
+    setQuizzes(quizzes.map(q => q.id === id ? response : q));
+    return response;
+  } catch (err) {
+    setError(err instanceof Error ? err.message : String(err));
+    throw err;
+  } finally {
+    setLoading(false);
+  }
+}, [quizzes]);
+
   const createQuiz = useCallback(
     async (data: any) => {
       try {
@@ -78,5 +95,6 @@ export function useQuiz() {
     createQuiz,
     getQuizById,
     getQuizzesByAuthorName,
+    updateQuiz,
   };
 }

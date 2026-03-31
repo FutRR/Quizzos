@@ -196,21 +196,27 @@ export default function EditQuizz({ quizId }: EditQuizzProps) {
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* --- Infos du quiz --- */}
                 <div className="space-y-4">
+                    <label htmlFor="title">Titre :</label>
                     <input
+                        id="title"
                         type="text"
                         placeholder="Titre"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         className="input input-bordered w-full"
                     />
+                    <label htmlFor="description">Description :</label>
                     <input
+                        id="description"
                         type="text"
                         placeholder="Description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className="input input-bordered w-full"
                     />
+                    <label htmlFor="difficulty">Difficulté :</label>
                     <select
+                        id="difficulty"
                         value={difficulty}
                         onChange={(e) => setDifficulty(e.target.value)}
                         className="select select-bordered w-full"
@@ -220,6 +226,7 @@ export default function EditQuizz({ quizId }: EditQuizzProps) {
                         <option value="Medium">Moyen</option>
                         <option value="Hard">Difficile</option>
                     </select>
+                    <label htmlFor="tags">Tags :</label>
                     <TagInput
                         selectedTags={selectedTags}
                         onTagsChange={setSelectedTags}
