@@ -190,7 +190,13 @@ namespace MonAPIDotNet.Service
                         QuestionId = answer.QuestionId
                     }).ToList()
                 }).ToList(),
-                TagIds = q.QuizTags.Select(qt => qt.TagId).ToList()
+                TagIds = q.QuizTags.Select(qt => qt.TagId).ToList(),
+                Tags = q.QuizTags.Select(qt => new TagDto
+                {
+                    Id = qt.Tag.Id,
+                    Name = qt.Tag.Name,
+                    Color = qt.Tag.Color
+                }).ToList()
             }).ToList();
         }
 
@@ -221,7 +227,13 @@ namespace MonAPIDotNet.Service
                 AuthorId = quiz.AuthorId,
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt,
-                TagIds = quiz.QuizTags.Select(qt => qt.TagId).ToList()
+                TagIds = quiz.QuizTags.Select(qt => qt.TagId).ToList(),
+                Tags = quiz.QuizTags.Select(qt => new TagDto
+                {
+                    Id = qt.Tag.Id,
+                    Name = qt.Tag.Name,
+                    Color = qt.Tag.Color
+                }).ToList()
             };
         }
 
