@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth";
 import Link from "next/link";
 import DeleteQuizz from "@/app/components/Quizz/DeleteQuizz";
+import TagBadge from "@/app/components/Tag/TagBadge";
 
 export default function QuizDetail({
   params,
@@ -40,7 +41,7 @@ export default function QuizDetail({
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">{quiz.title}</h1>
       <p className="text-gray-600 mb-2">{quiz.description}</p>
-      <div className="flex gap-4 mb-4">
+      <div className="flex items-center gap-4 mb-4">
         <span className="badge">Difficulté: {quiz.difficulty}</span>
         <Link
           href={`/profile/${quiz.authorName}`}
@@ -48,6 +49,11 @@ export default function QuizDetail({
         >
           By {quiz.authorName}
         </Link>
+      </div>
+      <div className="flex gap-2 mb-4">
+        {quiz.tags.map((tag: any) => (
+          <TagBadge key={tag.id} tag={tag} size="md" />
+        ))}
       </div>
       {quiz.imageUrl && (
         <img
