@@ -22,12 +22,12 @@ export default async function PublicProfile({
   if (!profile) notFound();
 
   return (
-    <div className="flex">
-      <div>
+    <div className="flex justify-between px-16 gap-8">
+      <div className="flex flex-col w-1/2">
         <UserProfileInfo />
         <ProfileStats username={username} />
       </div>
-      {<GetUserQuizzes authorName={username} />}
+      <div className="w-1/2">{<GetUserQuizzes authorName={username} />}</div>
     </div>
   );
 }
