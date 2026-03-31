@@ -1,9 +1,11 @@
 "use client";
 
 import { Tag } from "@/app/types/tagTypes";
+import Link from "next/link";
 
 interface QuizCardProps {
   quizData: {
+    id: string;
     title: string;
     description: string;
     authorName: string;
@@ -15,6 +17,7 @@ interface QuizCardProps {
 
 export default function QuizCard({ quizData }: QuizCardProps) {
   const quiz = {
+    id: quizData.id,
     title: quizData.title,
     description: quizData.description,
     authorName: quizData.authorName,
@@ -25,6 +28,7 @@ export default function QuizCard({ quizData }: QuizCardProps) {
 
   return (
     <div>
+      <Link href={`/quizzes/${quiz.id}`}>
       <div className="relative rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 bg-gray-900">
         <div className="w-full aspect-[4/3] bg-gray-800 animate-pulse" />
         {/* <img
@@ -61,6 +65,7 @@ export default function QuizCard({ quizData }: QuizCardProps) {
           </div>
         </div>
       </div>
+      </Link>
     </div>
   );
 }
