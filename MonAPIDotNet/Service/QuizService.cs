@@ -9,7 +9,7 @@ namespace MonAPIDotNet.Service
     public interface IQuizService
     {
         Task<QuizDTO> CreateQuizAsync(CreateQuizDTO dto, string authorId);
-        Task<QuizDTO> UpdateQuizAsync(int id, QuizDTO dto);
+        Task<QuizDTO> UpdateQuizAsync(int id, UpdateQuizDTO dto);
         Task DeleteQuizAsync(int id);
 
         Task<List<QuizDTO>> GetAllQuizzesAsync(int page = 1, int pageSize = 20);
@@ -219,7 +219,7 @@ namespace MonAPIDotNet.Service
             };
         }
 
-        public async Task<QuizDTO> UpdateQuizAsync(int id, QuizDTO dto)
+        public async Task<QuizDTO> UpdateQuizAsync(int id, UpdateQuizDTO dto)
         {
             var quiz = await _context.Quizzes.FindAsync(id);
             if (quiz == null)
@@ -230,6 +230,77 @@ namespace MonAPIDotNet.Service
             quiz.Difficulty = Enum.Parse<DifficultyType>(dto.Difficulty);
             quiz.ImageUrl = dto.ImageUrl;
             quiz.UpdatedAt = DateTime.UtcNow;
+
+            // Mettre à jour les questions
+            if (dto.Questions != null)
+            {
+                var existingQuestions = await _context.Questions
+                    .Include(q => q.Answers)
+                    .Include(q => q.Images)
+                    .Where(q => q.QuizId == id)
+                    .ToListAsync();
+
+                // Supprimer les questions qui ne sont plus dans le DTO
+                var dtoQuestionIds = dto.Questions.Where(q => q.Id > 0).Select(q => q.Id).ToHashSet();
+                var toRemove = existingQuestions.Where(q => !dtoQuestionIds.Contains(q.Id)).ToList();
+                _context.Questions.RemoveRange(toRemove);
+
+                foreach (var questionDto in dto.Questions)
+                {
+                    if (questionDto.Id > 0)
+                    {
+                        // Mise à jour d'une question existante
+                        var existing = existingQuestions.FirstOrDefault(q => q.Id == questionDto.Id);
+                        if (existing != null)
+                        {
+                            existing.Text = questionDto.Text;
+                            existing.Type = Enum.Parse<QuestionType>(questionDto.Type);
+                            existing.UpdatedAt = DateTime.UtcNow;
+
+                            // Remplacer les réponses
+                            _context.Answers.RemoveRange(existing.Answers);
+                            existing.Answers = questionDto.Answers.Select(a => new Answer
+                            {
+                                QuestionId = existing.Id,
+                                Value = a.Value,
+                                IsCorrect = a.IsCorrect
+                            }).ToList();
+
+                            // Remplacer les images
+                            _context.QuestionImages.RemoveRange(existing.Images);
+                            existing.Images = questionDto.ImagesUrls.Select((url, i) => new QuestionImage
+                            {
+                                QuestionId = existing.Id,
+                                Url = url,
+                                Order = i
+                            }).ToList();
+                        }
+                    }
+                    else
+                    {
+                        // Nouvelle question
+                        var newQuestion = new Question
+                        {
+                            QuizId = id,
+                            Text = questionDto.Text,
+                            Type = Enum.Parse<QuestionType>(questionDto.Type),
+                            CreatedAt = DateTime.UtcNow,
+                            Answers = questionDto.Answers.Select(a => new Answer
+                            {
+                                Value = a.Value,
+                                IsCorrect = a.IsCorrect
+                            }).ToList(),
+                            Images = questionDto.ImagesUrls.Select((url, i) => new QuestionImage
+                            {
+                                Url = url,
+                                Order = i
+                            }).ToList()
+                        };
+                        _context.Questions.Add(newQuestion);
+                    }
+                }
+            }
+            
 
             await _context.SaveChangesAsync();
 
@@ -243,6 +314,23 @@ namespace MonAPIDotNet.Service
                 AuthorId = quiz.AuthorId,
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt,
+                Questions = quiz.Questions.Select(q => new QuestionDTO
+                {
+                    Id = q.Id,
+                    QuizId = q.QuizId,
+                    Text = q.Text,
+                    Type = q.Type.ToString(),
+                    CreatedAt = q.CreatedAt,
+                    UpdatedAt = q.UpdatedAt,
+                    ImagesUrls = q.Images.Select(qi => qi.Url).ToList(),
+                    Answers = q.Answers.Select(a => new AnswerDTO
+                    {
+                        Id = a.Id,
+                        QuestionId = a.QuestionId,
+                        Value = a.Value,
+                        IsCorrect = a.IsCorrect
+                    }).ToList()
+                }).ToList(),
                 TagIds = quiz.QuizTags.Select(qt => qt.TagId).ToList()
             };
         }

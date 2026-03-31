@@ -24,4 +24,14 @@ namespace MonAPIDotNet.DTOs
         public string? ImageUrl { get; set; }
         public List<int> TagIds { get; set; } = new List<int>();
     }
+
+    public class UpdateQuizDTO
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Difficulty { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
+        public List<int> TagIds { get; set; } = new List<int>();
+        public List<QuestionDTO> Questions { get; set; } = new List<QuestionDTO>();
+    }
 }

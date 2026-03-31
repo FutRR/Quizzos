@@ -43,7 +43,7 @@
             <response code="400">Requête invalide. Les données du quiz sont manquantes ou invalides.</response>
             <response code="401">Non autorisé. L'utilisateur doit être authentifié pour créer un quiz.</response>
         </member>
-        <member name="M:MonAPIDotNet.Controllers.QuizController.UpdateQuizAsync(System.Int32,MonAPIDotNet.DTOs.QuizDTO)">
+        <member name="M:MonAPIDotNet.Controllers.QuizController.UpdateQuizAsync(System.Int32,MonAPIDotNet.DTOs.UpdateQuizDTO)">
             <summary>
             Met à jour un quiz existant avec les données fournies.
             </summary>

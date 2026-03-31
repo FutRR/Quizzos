@@ -23,7 +23,7 @@ export class QuizService {
     }
     // Update quiz
     async updateQuiz(id: string, data: any): Promise<any> {
-        const response = await fetchClient.put(`/quiz/${id}`, data);
+        const response = await fetchClient.patch(`/quiz/${id}`, data);
         return response;
     }
     // Delete quiz

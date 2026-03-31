@@ -115,7 +115,7 @@ namespace MonAPIDotNet.Controllers
         [ProducesResponseType(typeof(QuizDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<QuizDTO>> UpdateQuizAsync(int id, [FromBody] QuizDTO dto)
+        public async Task<ActionResult<QuizDTO>> UpdateQuizAsync(int id, [FromBody] UpdateQuizDTO dto)
         {
             var authorId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             if (string.IsNullOrEmpty(authorId))
