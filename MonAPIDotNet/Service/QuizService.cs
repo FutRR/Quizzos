@@ -128,6 +128,12 @@ namespace MonAPIDotNet.Service
                     }).ToList()
                 }).ToList(),
                 TagIds = quiz.QuizTags.Select(qt => qt.TagId).ToList(),
+                Tags = quiz.QuizTags.Select(qt => new TagDto
+                {
+                    Id = qt.Tag.Id,
+                    Name = qt.Tag.Name,
+                    Color = qt.Tag.Color
+                }).ToList(),
                 AuthorId = quiz.AuthorId,
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt
@@ -297,6 +303,23 @@ namespace MonAPIDotNet.Service
                             }).ToList()
                         };
                         _context.Questions.Add(newQuestion);
+                    }
+                    if (dto.TagIds != null)
+                    {
+                        var existingTags = await _context.QuizTags
+                            .Where(qt => qt.QuizId == id)
+                            .ToListAsync();
+
+                        _context.QuizTags.RemoveRange(existingTags);
+
+                        foreach (var tagId in dto.TagIds)
+                        {
+                            _context.QuizTags.Add(new QuizTag
+                            {
+                                QuizId = id,
+                                TagId = tagId
+                            });
+                        }
                     }
                 }
             }
