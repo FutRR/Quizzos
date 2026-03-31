@@ -5,6 +5,7 @@ import { useQuiz } from "@/app/hooks/useQuiz";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth";
 import Link from "next/link";
+import DeleteQuizz from "@/app/components/Quizz/DeleteQuizz";
 
 export default function QuizDetail({
   params,
@@ -16,6 +17,8 @@ export default function QuizDetail({
   const [quiz, setQuiz] = useState<any>(null);
   const router = useRouter();
   const { user } = useAuth();
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     const loadQuiz = async () => {
@@ -44,7 +47,7 @@ export default function QuizDetail({
           className="text-sm opacity-90"
         >
           By {quiz.authorName}
-        </Link>{" "}
+        </Link>
       </div>
       {quiz.imageUrl && (
         <img
@@ -73,6 +76,17 @@ export default function QuizDetail({
             >
               Modifier le quiz
             </button>
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="btn btn-danger"
+            >
+              Supprimer le quiz
+            </button>
+            <DeleteQuizz
+              isOpen={showDeleteModal}
+              onClose={() => setShowDeleteModal(false)}
+              quizId={id}
+            />
           </div>
           <div className="mt-4">
             <h2 className="text-xl font-bold mb-2">Questions</h2>

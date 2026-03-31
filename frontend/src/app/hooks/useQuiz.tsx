@@ -70,20 +70,6 @@ export function useQuiz() {
     }
   }, []);
 
-  const updateQuiz = useCallback(async (id: string, data: any) => {
-    try {
-        setLoading(true);
-        setError(null);
-        const response = await quizService.updateQuiz(id, data);
-        return response;
-    } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-        throw err;
-    } finally {
-        setLoading(false);
-    }
-}, []);
-
   return {
     quizzes,
     loading,
@@ -92,6 +78,5 @@ export function useQuiz() {
     createQuiz,
     getQuizById,
     getQuizzesByAuthorName,
-    updateQuiz,
   };
 }
