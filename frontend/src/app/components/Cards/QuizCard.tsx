@@ -45,12 +45,14 @@ export default function QuizCard({ quizData }: QuizCardProps) {
           {/* Titre et auteur en haut */}
           <div className="text-white">
             <h2 className="text-3xl font-bold mb-2">{quiz.title}</h2>
-            <Link
-              href={`/profile/${quiz.authorName}`}
+            <span
+              onClick={() =>
+                (window.location.href = "/profile/" + quiz.authorName)
+              }
               className="text-sm opacity-90"
             >
               By {quiz.authorName}
-            </Link>
+            </span>
           </div>
 
           {/* Tags en bas */}
