@@ -60,17 +60,6 @@ export default function QuizDetail({
       </div>
       {user && quiz.authorName === user.userName && (
         <div className="mt-6">
-          <div className="mt-4">
-            <h2 className="text-xl font-bold mb-2">Questions</h2>
-            <div className="space-y-4">
-              {quiz.questions.map((question: any) => (
-                <div key={question.id} className="border p-4 rounded">
-                  <h3 className="font-bold">{question.text}</h3>
-                  <p className="text-sm text-gray-500">Type: {question.type}</p>
-                </div>
-              ))}
-            </div>
-          </div>
           <div className="flex gap-4">
             <button
               onClick={() => router.push(`/quizzes/${id}/add-question`)}
@@ -84,6 +73,17 @@ export default function QuizDetail({
             >
               Modifier le quiz
             </button>
+          </div>
+          <div className="mt-4">
+            <h2 className="text-xl font-bold mb-2">Questions</h2>
+            <div className="space-y-4">
+              {quiz.questions.map((question: any) => (
+                <div key={question.id} className="border p-4 rounded">
+                  <h3 className="font-bold">{question.text}</h3>
+                  <p className="text-sm text-gray-500">Type: {question.type}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
