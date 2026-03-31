@@ -76,17 +76,21 @@ export default function QuizDetail({
             >
               Modifier le quiz
             </button>
-            <button
-              onClick={() => setShowDeleteModal(true)}
-              className="btn btn-danger"
-            >
-              Supprimer le quiz
-            </button>
-            <DeleteQuizz
-              isOpen={showDeleteModal}
-              onClose={() => setShowDeleteModal(false)}
-              quizId={id}
-            />
+            {user && quiz.authorName === user.userName && (
+              <div>
+                <button
+                  onClick={() => setShowDeleteModal(true)}
+                  className="btn btn-danger"
+                >
+                  Supprimer le quiz
+                </button>
+                <DeleteQuizz
+                  isOpen={showDeleteModal}
+                  onClose={() => setShowDeleteModal(false)}
+                  quizId={id}
+                />
+              </div>
+            )}
           </div>
           <div className="mt-4">
             <h2 className="text-xl font-bold mb-2">Questions</h2>
