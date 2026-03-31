@@ -3,12 +3,14 @@
 import { use, useEffect, useState } from "react";
 import { useQuiz } from "@/app/hooks/useQuiz";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/hooks/useAuth";
 
 export default function QuizDetail({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const { getQuizById, loading, error } = useQuiz();
     const [quiz, setQuiz] = useState<any>(null);
     const router = useRouter();
+    const { user } = useAuth();
 
     useEffect(() => {
         const loadQuiz = async () => {
@@ -42,14 +44,29 @@ export default function QuizDetail({ params }: { params: Promise<{ id: string }>
                     Créé le: {new Date(quiz.createdAt).toLocaleDateString()}
                 </p>
             </div>
-            <div className="flex gap-4">
-                <button onClick={() => router.push(`/quizzes/${id}/add-question`)} className="btn btn-primary">
-                    Ajouter une question
-                </button>
-                <button onClick={() => router.push(`/quizzes/${id}/edit-quiz`)} className="btn btn-primary">
-                    Modifier le quiz
-                </button>
+            {user && quiz.authorName === user.userName && (
+                <div className="mt-6">
+                <div className="mt-4">
+                    <h2 className="text-xl font-bold mb-2">Questions</h2>
+                    <div className="space-y-4">
+                        {quiz.questions.map((question: any) => (
+                            <div key={question.id} className="border p-4 rounded">
+                                <h3 className="font-bold">{question.text}</h3>
+                                <p className="text-sm text-gray-500">Type: {question.type}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="flex gap-4">
+                    <button onClick={() => router.push(`/quizzes/${id}/add-question`)} className="btn btn-primary">
+                        Ajouter une question
+                    </button>
+                    <button onClick={() => router.push(`/quizzes/${id}/edit-quiz`)} className="btn btn-primary">
+                        Modifier le quiz
+                    </button>
+                </div>
             </div>
+            )}
         </div>
     );
 }
