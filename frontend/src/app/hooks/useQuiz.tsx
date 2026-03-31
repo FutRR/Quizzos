@@ -70,6 +70,23 @@ export function useQuiz() {
     }
   }, []);
 
+  const deleteQuiz = useCallback(
+    async (id: string) => {
+      try {
+        setLoading(true);
+        setError(null);
+        await quizService.deleteQuiz(id);
+        setQuizzes(quizzes.filter((quiz) => quiz.id !== id));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [quizzes],
+  );
+
   return {
     quizzes,
     loading,
@@ -78,5 +95,6 @@ export function useQuiz() {
     createQuiz,
     getQuizById,
     getQuizzesByAuthorName,
+    deleteQuiz,
   };
 }
