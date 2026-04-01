@@ -32,8 +32,8 @@ export default function UserProfileInfo() {
       {profile ? (
         <div className="flex">
           <img
-            src={avatar.image}
-            alt={avatar.imageAlt}
+            src={profile.avatarUrl || avatar.image}
+            alt={`Photo de profil de ${profile.userName}`}
             className="w-32 h-32 rounded-full mb-4 object-cover"
           />
           <div className="ml-6 text-left">
