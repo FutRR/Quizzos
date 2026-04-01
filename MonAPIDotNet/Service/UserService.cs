@@ -104,7 +104,7 @@ namespace MonAPIDotNet.Service
             if (!string.IsNullOrEmpty(userDto.UserName))
                 user.UserName = userDto.UserName;
 
-            if (!string.IsNullOrEmpty(userDto.AvatarUrl) && Uri.TryCreate(userDto.AvatarUrl, UriKind.Absolute, out _))
+            if (!string.IsNullOrEmpty(userDto.AvatarUrl) && Uri.TryCreate(userDto.AvatarUrl, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
                 user.UserProfile.AvatarUrl = userDto.AvatarUrl;
 
             await _context.SaveChangesAsync();

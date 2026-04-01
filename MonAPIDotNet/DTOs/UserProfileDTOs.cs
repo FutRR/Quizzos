@@ -19,7 +19,6 @@ namespace MonAPIDotNet.DTOs
     public class UpdateUserProfileDTO
     {
         public string? UserName { get; set; }
-        [Url]
         public string? AvatarUrl { get; set; }
     }
 
