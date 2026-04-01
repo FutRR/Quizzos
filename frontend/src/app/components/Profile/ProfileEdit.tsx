@@ -31,7 +31,7 @@ export default function ProfileEdit() {
         avatarUrl,
       });
       if (updatedProfile) {
-        router.push(`/profile/${updatedProfile.id}`);
+        router.push(`/profile`);
       }
     } catch {
       // error is already set in useProfile state

@@ -5,14 +5,12 @@ import ProfileInfo from "../components/Profile/MyProfileInfo";
 import ProfileStats from "../components/Profile/ProfileStats";
 import GetUserQuizzes from "../components/Quizz/GetUserQuizzes";
 import { useAuth } from "../hooks/useAuth";
+import { useState } from "react";
 
 export default function Profile() {
   const { user, loading } = useAuth();
-
-  let edit = false;
-  const toggle = () => {
-    edit = true;
-  };
+  const [edit, setEdit] = useState(false);
+  const toggle = () => setEdit((prev) => !prev);
 
   return (
     <div className="flex justify-between px-16 gap-8">
