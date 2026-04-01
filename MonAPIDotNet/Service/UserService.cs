@@ -2,6 +2,7 @@ using MonAPIDotNet.Data;
 using MonAPIDotNet.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using MonAPIDotNet.Exceptions;
 
 namespace MonAPIDotNet.Service
 {
@@ -10,7 +11,7 @@ namespace MonAPIDotNet.Service
         Task<List<UserProfileDTO>> GetAllUsersAsync();
         Task<UserProfileDTO> GetUserByIdAsync(string id);
         Task<UserProfileDTO> GetUserByUsernameAsync(string username);
-        Task<bool> UpdateUserAsync(string id, UserProfileDTO userDto);
+        Task<UpdateUserProfileDTO> UpdateMyProfileAsync(string id, UpdateUserProfileDTO userDto);
         Task<PrivateUserProfileDTO> GetMyProfileAsync(string username);
     }
     public class UserService : IUserService
@@ -88,23 +89,30 @@ namespace MonAPIDotNet.Service
             };
         }
 
-        public async Task<bool> UpdateUserAsync(string id, UserProfileDTO userDto)
+        public async Task<UpdateUserProfileDTO> UpdateMyProfileAsync(string id, UpdateUserProfileDTO userDto)
         {
             var user = await _context.Users
                 .Include(u => u.UserProfile)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
-            if (user?.UserProfile == null)
-                return false;
+            if (user == null)
+                throw new NotFoundException("User not found.", id);
+            if (user.UserProfile == null)
+                throw new NotFoundException("User profile not found.", id);
 
             // Mise à jour uniquement des champs fournis
-            if (userDto.AvatarUrl != null)
+            if (!string.IsNullOrEmpty(userDto.UserName))
+                user.UserName = userDto.UserName;
+
+            if (!string.IsNullOrEmpty(userDto.AvatarUrl) && Uri.TryCreate(userDto.AvatarUrl, UriKind.Absolute, out _))
                 user.UserProfile.AvatarUrl = userDto.AvatarUrl;
 
-            _context.UserProfiles.Update(user.UserProfile);
-
             await _context.SaveChangesAsync();
-            return true;
+            return new UpdateUserProfileDTO
+            {
+                UserName = user.UserName!,
+                AvatarUrl = user.UserProfile.AvatarUrl,
+            };
         }
 
     }

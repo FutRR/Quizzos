@@ -1,10 +1,8 @@
 using MonAPIDotNet.DTOs;
 using MonAPIDotNet.Service;
+using MonAPIDotNet.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using System.Text.RegularExpressions;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace MonAPIDotNet.Controllers
@@ -93,5 +91,46 @@ namespace MonAPIDotNet.Controllers
             return Ok(userProfile);
         }
 
+        // PATCH /api/user/me
+
+        /// <summary>
+        /// Met à jour le profil de l'utilisateur actuellement connecté.
+        /// </summary>
+        /// <param name="userDto">Les données du profil à mettre à jour.</param>
+        /// <returns>Le profil mis à jour de l'utilisateur actuellement connecté.</returns>
+        /// <response code="200">Le profil mis à jour de l'utilisateur actuellement connecté.</response>
+        /// <response code="400">Requête invalide. Les données fournies sont invalides.</response>
+        /// <response code="401">Non autorisé. L'utilisateur n'est pas authentifié.</response>
+        /// <response code="404">Non trouvé. Le profil de l'utilisateur n'existe pas.</response>
+        [HttpPatch("me")]
+        [Authorize]
+        [ProducesResponseType(typeof(UserProfileDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<UserProfileDTO>> UpdateMyProfile([FromBody] UpdateUserProfileDTO userDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (userDto == null || (string.IsNullOrEmpty(userDto.UserName) && string.IsNullOrEmpty(userDto.AvatarUrl)))
+                return BadRequest("Au moins un champ doit être fourni.");
+
+            var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            try
+            {
+                var updatedUserProfile = await _userService.UpdateMyProfileAsync(userId, userDto);
+                return Ok(updatedUserProfile);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+
+            }
+
+        }
     }
 }

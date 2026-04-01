@@ -82,6 +82,17 @@
             <response code="404">Non trouvé. Le profil de l'utilisateur n'existe pas.</response>
         </member>
         <!-- Badly formed XML comment ignored for member "M:MonAPIDotNet.Controllers.UserController.GetUserProfile(System.String)" -->
+        <member name="M:MonAPIDotNet.Controllers.UserController.UpdateMyProfile(MonAPIDotNet.DTOs.UpdateUserProfileDTO)">
+            <summary>
+            Met à jour le profil de l'utilisateur actuellement connecté.
+            </summary>
+            <param name="userDto">Les données du profil à mettre à jour.</param>
+            <returns>Le profil mis à jour de l'utilisateur actuellement connecté.</returns>
+            <response code="200">Le profil mis à jour de l'utilisateur actuellement connecté.</response>
+            <response code="400">Requête invalide. Les données fournies sont invalides.</response>
+            <response code="401">Non autorisé. L'utilisateur n'est pas authentifié.</response>
+            <response code="404">Non trouvé. Le profil de l'utilisateur n'existe pas.</response>
+        </member>
         <member name="T:MonAPIDotNet.Migrations.Init">
             <inheritdoc />
         </member>
