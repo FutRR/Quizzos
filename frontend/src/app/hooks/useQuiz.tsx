@@ -26,20 +26,23 @@ export function useQuiz() {
 
   // Add after getQuizzesByAuthorName (around line 71), before the return:
 
-const updateQuiz = useCallback(async (id: string, data: any) => {
-  try {
-    setLoading(true);
-    setError(null);
-    const response = await quizService.updateQuiz(id, data);
-    setQuizzes(quizzes.map(q => q.id === id ? response : q));
-    return response;
-  } catch (err) {
-    setError(err instanceof Error ? err.message : String(err));
-    throw err;
-  } finally {
-    setLoading(false);
-  }
-}, [quizzes]);
+  const updateQuiz = useCallback(
+    async (id: string, data: any) => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await quizService.updateQuiz(id, data);
+        setQuizzes(quizzes.map((q) => (q.id === id ? response : q)));
+        return response;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [quizzes],
+  );
 
   const createQuiz = useCallback(
     async (data: any) => {
@@ -87,6 +90,20 @@ const updateQuiz = useCallback(async (id: string, data: any) => {
     }
   }, []);
 
+  const deleteQuiz = useCallback(async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      await quizService.deleteQuiz(id);
+      setQuizzes(quizzes.filter((q) => q.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     quizzes,
     loading,
@@ -96,5 +113,6 @@ const updateQuiz = useCallback(async (id: string, data: any) => {
     getQuizById,
     getQuizzesByAuthorName,
     updateQuiz,
+    deleteQuiz,
   };
 }
