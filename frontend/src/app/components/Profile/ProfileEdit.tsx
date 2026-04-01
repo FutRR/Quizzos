@@ -19,6 +19,8 @@ export default function ProfileEdit() {
     const loadProfile = async () => {
       const profileData = await userService.getMyProfile();
       setProfile(profileData);
+      setUserName(profileData.userName);
+      setAvatarUrl(profileData.avatarUrl || ""); // Assurez-vous que avatarUrl est une chaîne, même si elle est vide
     };
     loadProfile();
   }, []);
@@ -44,8 +46,10 @@ export default function ProfileEdit() {
       {loading && <p>Loading...</p>}
       <div>
         <h1>Edit Profile</h1>
-        <form onSubmit={handleSubmit}>
+        <form className="mb-6 space-y-4" onSubmit={handleSubmit}>
+          <label htmlFor="username">Nom d'utilisateur : </label>
           <input
+            id="username"
             type="text"
             placeholder={profile?.userName}
             value={userName}
@@ -55,7 +59,12 @@ export default function ProfileEdit() {
             onImageUploaded={setAvatarUrl}
             currentImageUrl={avatarUrl}
           />
-          <button type="submit">Save</button>
+          <button
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-1/2 self-center rounded"
+            type="submit"
+          >
+            Sauvegarder
+          </button>
         </form>
       </div>
     </>
