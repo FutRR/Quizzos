@@ -22,7 +22,15 @@ class UserService {
     }
 
     async updateMyProfile(data: UpdateProfileData): Promise<MyUserProfile> {
-        const response = await fetchClient.put<MyUserProfile>("/User/me", data);
+        console.log("[UserService] updateMyProfile() called with data:", data);
+        try {
+            console.log("[UserService] Making PATCH request to /User/me with data:", data);
+        } catch (error) {
+            console.error("[UserService] Error in updateMyProfile():", error);
+            throw error;
+        }
+        const response = await fetchClient.patch<MyUserProfile>("/User/me", data);
+        console.log("[UserService] Response from updateMyProfile:", response);
         return response;
     }
 
