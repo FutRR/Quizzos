@@ -202,11 +202,15 @@ namespace MonAPIDotNet.Service
 
         public async Task<QuizDTO> CreateQuizAsync(CreateQuizDTO dto, string authorId)
         {
+            if (!Enum.TryParse<DifficultyType>(dto.Difficulty, out var difficulty))
+            {
+                difficulty = DifficultyType.Easy;
+            }
             var quiz = new Quiz
             {
                 Title = dto.Title,
                 Description = dto.Description,
-                Difficulty = Enum.Parse<DifficultyType>(dto.Difficulty),
+                Difficulty = difficulty,
                 ImageUrl = dto.ImageUrl,
                 AuthorId = authorId,
                 CreatedAt = DateTime.UtcNow,
@@ -217,18 +221,25 @@ namespace MonAPIDotNet.Service
             _context.Quizzes.Add(quiz);
             await _context.SaveChangesAsync();
 
+            var created = await _context.Quizzes
+                .Include(q => q.Author)
+                .Include(q => q.QuizTags)
+                    .ThenInclude(qt => qt.Tag)
+                .FirstAsync(q => q.Id == quiz.Id);
+
             return new QuizDTO
             {
-                Id = quiz.Id,
-                Title = quiz.Title,
-                Description = quiz.Description,
-                Difficulty = quiz.Difficulty.ToString(),
-                ImageUrl = quiz.ImageUrl,
-                AuthorId = quiz.AuthorId,
-                CreatedAt = quiz.CreatedAt,
-                UpdatedAt = quiz.UpdatedAt,
-                TagIds = quiz.QuizTags.Select(qt => qt.TagId).ToList(),
-                Tags = quiz.QuizTags.Select(qt => new TagDto
+                Id = created.Id,
+                Title = created.Title,
+                Description = created.Description,
+                Difficulty = created.Difficulty.ToString(),
+                ImageUrl = created.ImageUrl,
+                AuthorId = created.AuthorId,
+                AuthorName = created.Author?.UserName ?? "Unknown",
+                CreatedAt = created.CreatedAt,
+                UpdatedAt = created.UpdatedAt,
+                TagIds = created.QuizTags.Select(qt => qt.TagId).ToList(),
+                Tags = created.QuizTags.Select(qt => new TagDto
                 {
                     Id = qt.Tag.Id,
                     Name = qt.Tag.Name,
