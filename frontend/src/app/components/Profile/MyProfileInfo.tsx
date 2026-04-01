@@ -51,7 +51,7 @@ export default function MyProfilePage() {
   return (
     <div>
       {profile ? (
-        <div className="flex flex-col justify-end items-start text-center mb-4">
+        <div className="flex flex-col justify-end items-start text-center">
           <div className="flex">
             <img
               src={profile.avatarUrl || avatar.image}
@@ -63,7 +63,7 @@ export default function MyProfilePage() {
               <p>Abonnés: 12</p>
             </div>
           </div>
-          <div className="flex flex-col mt-6">
+          <div className="flex flex-col">
             {user?.userName === profile.userName && (
               <div className="mb-6 text-left">
                 <h2 className="text-lg font-semibold mb-1">Informations:</h2>
