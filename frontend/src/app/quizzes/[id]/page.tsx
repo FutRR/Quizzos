@@ -185,6 +185,15 @@ export default function QuizDetail({
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3 mb-10">
             <button
+              onClick={() => router.push(`/quizzes/${id}/play`)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-500 text-white text-sm font-semibold rounded-xl transition-colors shadow-lg shadow-green-600/20"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Jouer le quiz
+            </button>
+            <button
               onClick={() => router.push(`/quizzes/${id}/add-question`)}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl transition-colors shadow-lg shadow-indigo-600/20"
             >

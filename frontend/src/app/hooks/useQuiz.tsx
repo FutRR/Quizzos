@@ -5,24 +5,28 @@ export function useQuiz() {
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const quizService = new QuizService();
 
-  const getQuizzes = async () => {
+  const getQuizzes = useCallback(async (p: number = 1, pageSize: number = 12) => {
     setLoading(true);
     try {
-      const response = await quizService.getQuizzes();
+      const response = await quizService.getQuizzes(p, pageSize);
       setQuizzes(response);
+      setPage(p);
+      setHasMore(response.length >= pageSize);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    getQuizzes();
-  }, []);
+    getQuizzes(1);
+  }, [getQuizzes]);
 
   // Add after getQuizzesByAuthorName (around line 71), before the return:
 
@@ -108,6 +112,8 @@ export function useQuiz() {
     quizzes,
     loading,
     error,
+    page,
+    hasMore,
     getQuizzes,
     createQuiz,
     getQuizById,

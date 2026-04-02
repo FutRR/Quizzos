@@ -2,8 +2,8 @@ import fetchClient from "../lib/fetchClient";
 
 export class QuizService {
     // Get all quizzes
-    async getQuizzes(): Promise<any> {
-        const response = await fetchClient.get("/quiz/quizzes");
+    async getQuizzes(page: number = 1, pageSize: number = 12): Promise<any> {
+        const response = await fetchClient.get(`/quiz/quizzes?page=${page}&pageSize=${pageSize}`);
         return response;
     }
     // Get quiz by ID
