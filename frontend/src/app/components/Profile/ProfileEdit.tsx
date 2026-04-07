@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import ImageUpload from "../Images/ImageUpload";
+import AvatarUpload from "../Images/AvatarUpload";
 import { MyUserProfile } from "@/app/types/userTypes";
 import { useProfile } from "@/app/hooks/useProfile";
 import userService from "@/app/services/userService";
@@ -45,26 +45,29 @@ export default function ProfileEdit() {
       {error && <p>{error}</p>}
       {loading && <p>Loading...</p>}
       <div>
-        <h1>Edit Profile</h1>
         <form className="mb-6 space-y-4" onSubmit={handleSubmit}>
-          <label htmlFor="username">Nom d'utilisateur : </label>
-          <input
-            id="username"
-            type="text"
-            placeholder={profile?.userName}
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          <ImageUpload
-            onImageUploaded={setAvatarUrl}
-            currentImageUrl={avatarUrl}
-          />
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-1/2 self-center rounded"
-            type="submit"
-          >
-            Sauvegarder
-          </button>
+          <div className="flex">
+            <AvatarUpload
+              onImageUploaded={setAvatarUrl}
+              currentImageUrl={profile?.avatarUrl || ""}
+            />
+            <div className="flex flex-col justify-start items-start ml-6 text-left">
+              <input
+                className="text-xl font-bold px-1 border border-gray-300 rounded mb-4 w-1/2"
+                id="username"
+                type="text"
+                placeholder={profile?.userName}
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+              <button
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-1/2 rounded"
+                type="submit"
+              >
+                Sauvegarder
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </>
