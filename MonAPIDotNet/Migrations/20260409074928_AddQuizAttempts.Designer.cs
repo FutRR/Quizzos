@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MonAPIDotNet.Data;
 
@@ -11,9 +12,11 @@ using MonAPIDotNet.Data;
 namespace MonAPIDotNet.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260409074928_AddQuizAttempts")]
+    partial class AddQuizAttempts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -261,13 +264,6 @@ namespace MonAPIDotNet.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AuthorizedApplications");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Audience = "API_App"
-                        });
                 });
 
             modelBuilder.Entity("MonAPIDotNet.Data.Question", b =>

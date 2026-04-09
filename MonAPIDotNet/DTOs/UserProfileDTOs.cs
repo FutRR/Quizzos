@@ -22,4 +22,11 @@ namespace MonAPIDotNet.DTOs
         public string? AvatarUrl { get; set; }
     }
 
+    public class UserStatsDTO
+    {
+        public int QuizzesPlayed { get; set; }
+        public int TotalAttempts { get; set; }
+        public double AverageBestScorePercent { get; set; }
+        public double? FirstAttemptAverage { get; set; }
+    }
 }

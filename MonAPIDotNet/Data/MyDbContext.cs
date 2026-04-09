@@ -16,6 +16,7 @@ namespace MonAPIDotNet.Data
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuestionImage> QuestionImages { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<QuizAttempt> QuizAttempts { get; set; }
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
         }
@@ -48,6 +49,27 @@ namespace MonAPIDotNet.Data
 
             modelBuilder.Entity<Quiz>()
                 .HasIndex(q => q.CreatedAt);
+
+            // QuizAttempt config
+            modelBuilder.Entity<QuizAttempt>()
+                .HasIndex(a => new { a.UserId, a.QuizId });
+
+            modelBuilder.Entity<QuizAttempt>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<QuizAttempt>()
+                .HasOne(a => a.Quiz)
+                .WithMany()
+                .HasForeignKey(a => a.QuizId)
+                .OnDelete(DeleteBehavior.NoAction); // NoAction pour éviter le cycle de cascade via User→Quiz + User→QuizAttempt
+
+            // Seed data
+            modelBuilder.Entity<AuthorizedApplication>().HasData(
+                new AuthorizedApplication { Id = 1, Audience = "API_App" }
+            );
 
         }
     }

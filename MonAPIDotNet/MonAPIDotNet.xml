@@ -129,5 +129,29 @@
         <member name="M:MonAPIDotNet.Migrations.AddQuizEntities.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:MonAPIDotNet.Migrations.AddQuizAttempts">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddQuizAttempts.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddQuizAttempts.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddQuizAttempts.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MonAPIDotNet.Migrations.SeedAuthorizedApp">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.SeedAuthorizedApp.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.SeedAuthorizedApp.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.SeedAuthorizedApp.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
