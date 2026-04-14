@@ -4,6 +4,24 @@
         <name>MonAPIDotNet</name>
     </assembly>
     <members>
+        <member name="M:MonAPIDotNet.Controllers.QuizAttemptController.SubmitQuiz(MonAPIDotNet.DTOs.SubmitQuizDTO)">
+            <summary>
+            Soumet les réponses d'un quiz et retourne le résultat calculé côté serveur.
+            </summary>
+            <param name="dto">Les réponses sélectionnées par l'utilisateur.</param>
+            <returns>Le résultat détaillé de la tentative.</returns>
+            <response code="200">Le résultat de la tentative avec score et détail par question.</response>
+            <response code="401">Non autorisé. L'utilisateur doit être authentifié.</response>
+            <response code="404">Non trouvé. Le quiz n'existe pas.</response>
+        </member>
+        <member name="M:MonAPIDotNet.Controllers.QuizAttemptController.GetUserStats(System.String)">
+            <summary>
+            Récupère les statistiques de quiz d'un utilisateur.
+            </summary>
+            <param name="userId">L'ID de l'utilisateur.</param>
+            <returns>Les statistiques de l'utilisateur.</returns>
+            <response code="200">Les statistiques de l'utilisateur.</response>
+        </member>
         <member name="M:MonAPIDotNet.Controllers.QuizController.GetAllQuizzesAsync(System.Int32,System.Int32)">
             <summary>
             Récupère la liste de tous les quiz avec leurs questions, réponses, images et tags.
@@ -81,7 +99,15 @@
             <response code="401">Non autorisé. L'utilisateur n'est pas authentifié.</response>
             <response code="404">Non trouvé. Le profil de l'utilisateur n'existe pas.</response>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:MonAPIDotNet.Controllers.UserController.GetUserProfile(System.String)" -->
+        <member name="M:MonAPIDotNet.Controllers.UserController.GetUserProfile(System.String)">
+            <summary>
+            Récupère le profil public d'un utilisateur par son nom d'utilisateur.
+            </summary>
+            <param name="username">Le nom d'utilisateur de l'utilisateur dont on veut récupérer le profil public.</param>
+            <returns>Le profil public de l'utilisateur.</returns>
+            <response code="200">Le profil public de l'utilisateur.</response>
+            <response code="404">Non trouvé. L'utilisateur ou son profil public n'existe pas.</response>
+        </member>
         <member name="M:MonAPIDotNet.Controllers.UserController.UpdateMyProfile(MonAPIDotNet.DTOs.UpdateUserProfileDTO)">
             <summary>
             Met à jour le profil de l'utilisateur actuellement connecté.

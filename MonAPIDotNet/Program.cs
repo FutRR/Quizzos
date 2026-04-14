@@ -29,6 +29,7 @@ namespace MonAPIDotNet
             builder.Services.AddScoped<IQuizService, QuizService>();
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IImageUploadService, CloudinaryImageUploadService>();
+            builder.Services.AddScoped<IQuizAttemptService, QuizAttemptService>();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
