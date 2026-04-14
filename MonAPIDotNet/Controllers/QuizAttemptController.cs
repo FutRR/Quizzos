@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MonAPIDotNet.Data;
 using MonAPIDotNet.DTOs;
 using MonAPIDotNet.Service;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,10 +14,12 @@ namespace MonAPIDotNet.Controllers
     public class QuizAttemptController : ControllerBase
     {
         private readonly IQuizAttemptService _quizAttemptService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public QuizAttemptController(IQuizAttemptService quizAttemptService)
+        public QuizAttemptController(IQuizAttemptService quizAttemptService, UserManager<ApplicationUser> userManager)
         {
             _quizAttemptService = quizAttemptService;
+            _userManager = userManager;
         }
 
         // POST /api/quizattempt/submit
@@ -43,19 +47,25 @@ namespace MonAPIDotNet.Controllers
             return Ok(result);
         }
 
-        // GET /api/quizattempt/stats/{userId}
+        // GET /api/quizattempt/stats/{username}
 
         /// <summary>
-        /// Récupère les statistiques de quiz d'un utilisateur.
+        /// Récupère les statistiques de quiz d'un utilisateur via son nom d'utilisateur.
         /// </summary>
-        /// <param name="userId">L'ID de l'utilisateur.</param>
+        /// <param name="username">Le nom d'utilisateur.</param>
         /// <returns>Les statistiques de l'utilisateur.</returns>
         /// <response code="200">Les statistiques de l'utilisateur.</response>
-        [HttpGet("stats/{userId}")]
+        /// <response code="404">Utilisateur introuvable.</response>
+        [HttpGet("stats/{username}")]
         [ProducesResponseType(typeof(UserStatsDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<UserStatsDTO>> GetUserStats(string userId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<UserStatsDTO>> GetUserStats(string username)
         {
-            var stats = await _quizAttemptService.GetUserStatsAsync(userId);
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return NotFound("User not found.");
+
+            var stats = await _quizAttemptService.GetUserStatsAsync(user.Id);
             return Ok(stats);
         }
     }

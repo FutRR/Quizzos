@@ -5,6 +5,8 @@ import { useQuiz } from "@/app/hooks/useQuiz";
 import { useEffect, useState } from "react";
 import { BaseUser } from "@/app/types/userTypes";
 import { useAuth } from "@/app/hooks/useAuth";
+import quizAttemptService from "@/app/services/QuizAttemptService";
+import { UserStats } from "@/app/types/quizAttemptsType";
 
 interface ProfileStatsProps {
   username: string;
@@ -15,6 +17,7 @@ export default function ProfileStats({ username }: ProfileStatsProps) {
   const [profile, setProfile] = useState<BaseUser | null>(null);
   const [userQuizzes, setUserQuizzes] = useState<any[]>([]);
   const { getQuizzesByAuthorName } = useQuiz();
+  const [stats, setStats] = useState<UserStats | null>(null);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -25,6 +28,8 @@ export default function ProfileStats({ username }: ProfileStatsProps) {
       setProfile(profileData);
       if (profileData) {
         const quizzes = await getQuizzesByAuthorName(profileData.userName || "");
+        const userStats = await quizAttemptService.getUserStats(profileData.userName || "");
+        setStats(userStats);
         setUserQuizzes(quizzes || []);
       }
     };
@@ -36,10 +41,9 @@ export default function ProfileStats({ username }: ProfileStatsProps) {
       {profile ? (
         <div className="mb-6 text-left">
           <h2 className="text-lg font-semibold mb-1">Stats:</h2>
-          <p>Quiz joués: {/*profile?.stats.gamesPlayed*/}</p>
+          <p>Quiz joués: {stats?.quizzesPlayed || 0}</p>
           <p>Quiz créés: {userQuizzes.length}</p>
-          <p>Score Général: {/*profile.stats.totalScore*/}</p>
-          <p>Tags favoris: {/*profile.stats.favoriteTags*/}</p>
+          <p>Score Général: {stats?.averageBestScorePercent || 0}</p>
         </div>
       ) : (
         <p>Loading stats...</p>

@@ -5,6 +5,8 @@ import { useQuiz } from "@/app/hooks/useQuiz";
 import MultipleChoice from "@/app/components/Question/Game/MultipleChoice";
 import ShortAnswer from "@/app/components/Question/Game/ShortAnswer";
 import TrueOrFalse from "@/app/components/Question/Game/TrueOrFalse";
+import quizAttemptService from "@/app/services/QuizAttemptService";
+import { QuizAttemptResult, SubmitQuizPayload } from "@/app/types/quizAttemptsType";
 
 interface Answer {
   id: number;
@@ -30,6 +32,8 @@ export default function QuizPlay({ params }: { params: Promise<{ id: string }> }
   const [started, setStarted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<number, any>>({});
+  const [result, setResult] = useState<QuizAttemptResult | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -50,6 +54,52 @@ export default function QuizPlay({ params }: { params: Promise<{ id: string }> }
   const questions: Question[] = quiz.questions ?? [];
   const currentQuestion = questions[currentIndex];
   const isLast = currentIndex === questions.length - 1;
+
+// --- Écran résultat ---
+if (result) {
+  return (
+    <div className="max-w-2xl mx-auto mt-20 text-center text-white">
+      <h1 className="text-3xl font-bold">Résultat</h1>
+      <p className="mt-4 text-5xl font-bold text-indigo-400">
+        {result.scorePercent}%
+      </p>
+      <p className="mt-2 text-gray-400">
+        {result.correctAnswers} / {result.totalQuestions} bonnes réponses
+      </p>
+      {result.isFirstAttempt && (
+        <p className="mt-2 text-sm text-yellow-400">🎯 Première tentative !</p>
+      )}
+      {result.isNewBestScore && (
+        <p className="mt-2 text-sm text-green-400">🏆 Nouveau meilleur score !</p>
+      )}
+
+      {/* Détail par question */}
+      <div className="mt-8 text-left space-y-3">
+        {result.results.map((r, i) => (
+          <div
+            key={r.questionId}
+            className={`p-3 rounded-lg border ${
+              r.isCorrect
+                ? "border-green-600 bg-green-900/20"
+                : "border-red-600 bg-red-900/20"
+            }`}
+          >
+            <span className="font-medium">
+              Q{i + 1}: {r.isCorrect ? "✅ Correct" : "❌ Incorrect"}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={() => window.location.href = `/quizzes/${id}`}
+        className="mt-8 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold transition-colors"
+      >
+        Retour au quiz
+      </button>
+    </div>
+  );
+}
 
   // --- Écran de démarrage ---
   if (!started) {
@@ -73,14 +123,42 @@ export default function QuizPlay({ params }: { params: Promise<{ id: string }> }
     setUserAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }));
   };
 
-  const handleNext = () => {
-    if (isLast) {
-      // TODO: écran résultat / soumission
-      console.log("Quiz terminé", userAnswers);
+  const handleNext = async () => {
+    if (!isLast) {
+      setCurrentIndex((i) => i + 1);
       return;
     }
-    setCurrentIndex((i) => i + 1);
-  };
+  
+  // Payload
+  const payload: SubmitQuizPayload = {
+      quizId: Number(id),
+      answers: questions.map((q) => {
+        const answer = userAnswers[q.id];
+        // MultipleChoice et TrueFalse stockent un answerId (number)
+        // ShortAnswer stocke une string — on cherche l'answer correspondante
+        let selectedOptionIds: number[] = [];
+        if (typeof answer === "number") {
+          selectedOptionIds = [answer];
+        } else if (typeof answer === "string") {
+          const match = q.answers.find(
+            (a) => a.value.toLowerCase() === answer.toLowerCase()
+          );
+          if (match) selectedOptionIds = [match.id];
+        }
+        return { questionId: q.id, selectedOptionIds };
+      }),
+    };
+
+      setSubmitting(true);
+  try {
+    const res = await quizAttemptService.submitQuiz(payload);
+    setResult(res);
+  } catch (err) {
+    console.error("Erreur soumission quiz:", err);
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   // --- Rendu dynamique du composant selon le type ---
   const renderQuestion = () => {
@@ -117,10 +195,10 @@ export default function QuizPlay({ params }: { params: Promise<{ id: string }> }
       {/* Navigation */}
       <button
         onClick={handleNext}
-        disabled={userAnswers[currentQuestion.id] === undefined}
+        disabled={userAnswers[currentQuestion.id] === undefined || submitting}
         className="mt-6 w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 rounded-lg font-semibold transition-colors"
       >
-        {isLast ? "Terminer" : "Suivant"}
+        {isLast ? (submitting ? "Envoi..." : "Terminer") : "Suivant"}
       </button>
     </div>
   );
