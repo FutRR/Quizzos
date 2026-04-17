@@ -16,11 +16,12 @@
         </member>
         <member name="M:MonAPIDotNet.Controllers.QuizAttemptController.GetUserStats(System.String)">
             <summary>
-            Récupère les statistiques de quiz d'un utilisateur.
+            Récupère les statistiques de quiz d'un utilisateur via son nom d'utilisateur.
             </summary>
-            <param name="userId">L'ID de l'utilisateur.</param>
+            <param name="username">Le nom d'utilisateur.</param>
             <returns>Les statistiques de l'utilisateur.</returns>
             <response code="200">Les statistiques de l'utilisateur.</response>
+            <response code="404">Utilisateur introuvable.</response>
         </member>
         <member name="M:MonAPIDotNet.Controllers.QuizController.GetAllQuizzesAsync(System.Int32,System.Int32)">
             <summary>
@@ -177,6 +178,30 @@
             <inheritdoc />
         </member>
         <member name="M:MonAPIDotNet.Migrations.SeedAuthorizedApp.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MonAPIDotNet.Migrations.AddImpostorGame">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddImpostorGame.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddImpostorGame.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddImpostorGame.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MonAPIDotNet.Migrations.UpdateImpostorGameEntities">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.UpdateImpostorGameEntities.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.UpdateImpostorGameEntities.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.UpdateImpostorGameEntities.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

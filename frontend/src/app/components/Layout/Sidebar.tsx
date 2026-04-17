@@ -9,6 +9,7 @@ interface NavItem {
   name: string;
   href: string;
   icon: React.ReactNode;
+  children?: { name: string; href: string }[];
 }
 
 const navItems: NavItem[] = [
@@ -51,6 +52,34 @@ const navItems: NavItem[] = [
     ),
   },
   {
+    name: "Jeux",
+    href: "/game",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+        />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    ),
+    children: [
+      { name: "Impostor", href: "/game/impostor" },
+    ],
+  },
+  {
     name: "Profil",
     href: "/profile",
     icon: (
@@ -77,6 +106,12 @@ export default function Sidebar() {
 
   const { user, logout } = useAuth();
   const isActive = (href: string) => pathname === href;
+  const isParentActive = (item: NavItem) =>
+    item.children?.some((c) => pathname === c.href || pathname.startsWith(c.href + "/")) ?? false;
+
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>(() => ({}));
+  const toggleMenu = (name: string) =>
+    setOpenMenus((prev) => ({ ...prev, [name]: !prev[name] }));
 
   return (
     <>
@@ -148,33 +183,105 @@ export default function Sidebar() {
         {/* Navigation */}
         <nav className="flex-1 flex flex-col justify-between h-50% px-4 py-6 space-y-1 overflow-y-auto">
           <div className="flex flex-col space-y-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className={`
-                                    flex items-center px-4 py-3 rounded-lg transition-all duration-200
-                                    ${
-                                      isActive(item.href)
-                                        ? "bg-blue-900/50 text-blue-400 font-medium"
-                                        : "text-gray-400 hover:bg-gray-800 hover:text-white"
-                                    }
-                                `}
-              >
-                <span
-                  className={
-                    isActive(item.href) ? "text-blue-400" : "text-gray-500"
-                  }
+            {navItems.map((item) => {
+              const hasChildren = !!item.children && item.children.length > 0;
+              const parentActive = isParentActive(item);
+              const menuOpen = openMenus[item.name] ?? parentActive;
+
+              if (hasChildren) {
+                return (
+                  <div key={item.name}>
+                    <button
+                      onClick={() => toggleMenu(item.name)}
+                      className={`
+                        w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200
+                        ${
+                          parentActive
+                            ? "bg-blue-900/50 text-blue-400 font-medium"
+                            : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                        }
+                      `}
+                    >
+                      <span
+                        className={
+                          parentActive ? "text-blue-400" : "text-gray-500"
+                        }
+                      >
+                        {item.icon}
+                      </span>
+                      <span className="ml-3">{item.name}</span>
+                      <svg
+                        className={`ml-auto w-4 h-4 transition-transform ${
+                          menuOpen ? "rotate-180" : ""
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                    {menuOpen && (
+                      <div className="ml-6 mt-1 flex flex-col space-y-1 border-l border-gray-700 pl-3">
+                        {item.children!.map((child) => (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            onClick={() => setIsOpen(false)}
+                            className={`
+                              flex items-center px-3 py-2 rounded-lg text-sm transition-all duration-200
+                              ${
+                                isActive(child.href)
+                                  ? "bg-blue-900/50 text-blue-400 font-medium"
+                                  : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                              }
+                            `}
+                          >
+                            <span>{child.name}</span>
+                            {isActive(child.href) && (
+                              <span className="ml-auto w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                            )}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`
+                                      flex items-center px-4 py-3 rounded-lg transition-all duration-200
+                                      ${
+                                        isActive(item.href)
+                                          ? "bg-blue-900/50 text-blue-400 font-medium"
+                                          : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                                      }
+                                  `}
                 >
-                  {item.icon}
-                </span>
-                <span className="ml-3">{item.name}</span>
-                {isActive(item.href) && (
-                  <span className="ml-auto w-1.5 h-1.5 bg-blue-400 rounded-full" />
-                )}
-              </Link>
-            ))}
+                  <span
+                    className={
+                      isActive(item.href) ? "text-blue-400" : "text-gray-500"
+                    }
+                  >
+                    {item.icon}
+                  </span>
+                  <span className="ml-3">{item.name}</span>
+                  {isActive(item.href) && (
+                    <span className="ml-auto w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
           {user ? (

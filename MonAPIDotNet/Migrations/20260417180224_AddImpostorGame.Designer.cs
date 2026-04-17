@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MonAPIDotNet.Data;
 
@@ -11,9 +12,11 @@ using MonAPIDotNet.Data;
 namespace MonAPIDotNet.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417180224_AddImpostorGame")]
+    partial class AddImpostorGame
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -293,9 +296,6 @@ namespace MonAPIDotNet.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("Winner")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("ImpostorGameSessions");
@@ -308,12 +308,6 @@ namespace MonAPIDotNet.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("EliminatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("HasVoted")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsEliminated")
                         .HasColumnType("bit");
@@ -330,9 +324,6 @@ namespace MonAPIDotNet.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("VotedForPlayerId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

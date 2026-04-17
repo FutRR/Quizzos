@@ -4,6 +4,7 @@ const API_BASE_URL =
 
 interface FetchOptions extends RequestInit {
   timeout?: number;
+  _retried?: boolean;
 }
 
 // Gestionnaire de token centralisé
@@ -109,12 +110,12 @@ class FetchClient {
 
       clearTimeout(timeoutId);
 
-      // Gérer les erreurs 401 - tenter un refresh du token
-      if (response.status === 401 && !endpoint.includes("/Auth/")) {
+      // Gérer les erreurs 401 - tenter un refresh du token (une seule fois)
+      if (response.status === 401 && !endpoint.includes("/Auth/") && !options._retried) {
         const refreshed = await this.tryRefreshToken();
         if (refreshed) {
-          // Réessayer la requête avec le nouveau token
-          return this.request<T>(endpoint, options);
+          // Réessayer la requête avec le nouveau token (marqué comme retry)
+          return this.request<T>(endpoint, { ...options, _retried: true });
         }
         tokenManager.clearToken();
         window.location.href = "/login";

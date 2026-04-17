@@ -30,6 +30,8 @@ namespace MonAPIDotNet
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IImageUploadService, CloudinaryImageUploadService>();
             builder.Services.AddScoped<IQuizAttemptService, QuizAttemptService>();
+            builder.Services.AddSignalR();
+            builder.Services.AddScoped<IImpostorGameService, ImpostorGameService>();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -74,6 +76,14 @@ namespace MonAPIDotNet
                         logger.LogInformation("Valid audiences from DB: [{Audiences}]", string.Join(", ", validAudiences));
 
                         context.Options.TokenValidationParameters.ValidAudiences = validAudiences;
+
+                        // Support pour SignalR : lire le token depuis la query string
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/gamehub"))
+                        {
+                            context.Token = accessToken;
+                        }
                     },
                     OnAuthenticationFailed = context =>
                     {
@@ -153,7 +163,7 @@ namespace MonAPIDotNet
             app.UseAuthentication();
             app.UseAuthorization();
 
-
+            app.MapHub<MonAPIDotNet.Hubs.GameHub>("/gamehub");
             app.MapControllers();
 
             app.Run();

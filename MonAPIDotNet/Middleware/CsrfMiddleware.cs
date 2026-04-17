@@ -32,8 +32,9 @@ public class CsrfMiddleware
      }
     else if (context.Request.Method != "GET")
     {
-        // Skip CSRF validation for API routes
-        if (context.Request.Path.StartsWithSegments("/api"))
+        // Skip CSRF validation for API routes and SignalR hubs
+        if (context.Request.Path.StartsWithSegments("/api") ||
+            context.Request.Path.StartsWithSegments("/gamehub"))
         {
             await _next(context);
             return;

@@ -17,7 +17,11 @@ namespace MonAPIDotNet.Data
         public DbSet<QuestionImage> QuestionImages { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<QuizAttempt> QuizAttempts { get; set; }
+        public DbSet<ImpostorGameSession> ImpostorGameSessions { get; set; }
+        public DbSet<ImpostorPlayer> ImpostorPlayers { get; set; }
+        public DbSet<ImpostorWordPair> ImpostorWordPairs { get; set; }
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
+
         {
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
