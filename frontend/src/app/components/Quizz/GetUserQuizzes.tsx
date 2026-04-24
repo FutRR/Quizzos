@@ -8,9 +8,13 @@ import QuizCard from "../Cards/QuizCard";
 
 interface GetUserQuizzesProps {
   authorName: string;
+  limit?: number;
 }
 
-export default function GetUserQuizzes({ authorName }: GetUserQuizzesProps) {
+export default function GetUserQuizzes({
+  authorName,
+  limit,
+}: GetUserQuizzesProps) {
   const { loading, error, getQuizzesByAuthorName } = useQuiz();
   const [userQuizzes, setUserQuizzes] = useState<any[]>([]);
 
@@ -18,11 +22,11 @@ export default function GetUserQuizzes({ authorName }: GetUserQuizzesProps) {
     const fetchUserQuizzes = async () => {
       const quizzes = await getQuizzesByAuthorName(authorName);
       console.log("User quizzes data:", quizzes);
-      setUserQuizzes(quizzes);
+      setUserQuizzes(limit ? quizzes.slice(0, limit) : quizzes);
     };
 
     fetchUserQuizzes();
-  }, [authorName, getQuizzesByAuthorName]);
+  }, [authorName, getQuizzesByAuthorName, limit]);
 
   return (
     <div className="flex flex-col align-center gap-8">

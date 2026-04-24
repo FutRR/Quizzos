@@ -36,7 +36,9 @@ export default function Profile() {
       </div>
       <div className="w-1/2">
         <h2 className="text-lg font-semibold mb-1">My Quizzes :</h2>
-        {!loading && user && <GetUserQuizzes authorName={user.userName} />}
+        {!loading && user && (
+          <GetUserQuizzes authorName={user.userName} limit={3} />
+        )}
       </div>
     </div>
   );
