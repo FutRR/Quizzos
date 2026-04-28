@@ -168,18 +168,6 @@
         <member name="M:MonAPIDotNet.Migrations.AddQuizAttempts.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:MonAPIDotNet.Migrations.SeedAuthorizedApp">
-            <inheritdoc />
-        </member>
-        <member name="M:MonAPIDotNet.Migrations.SeedAuthorizedApp.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:MonAPIDotNet.Migrations.SeedAuthorizedApp.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:MonAPIDotNet.Migrations.SeedAuthorizedApp.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
         <member name="T:MonAPIDotNet.Migrations.AddImpostorGame">
             <inheritdoc />
         </member>
@@ -202,6 +190,18 @@
             <inheritdoc />
         </member>
         <member name="M:MonAPIDotNet.Migrations.UpdateImpostorGameEntities.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:MonAPIDotNet.Migrations.AddUserDisplayName">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddUserDisplayName.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddUserDisplayName.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddUserDisplayName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

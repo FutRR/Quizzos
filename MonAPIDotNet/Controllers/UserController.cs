@@ -113,7 +113,7 @@ namespace MonAPIDotNet.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (userDto == null || (string.IsNullOrEmpty(userDto.UserName) && string.IsNullOrEmpty(userDto.AvatarUrl)))
+            if (userDto == null || (string.IsNullOrEmpty(userDto.DisplayName) && string.IsNullOrEmpty(userDto.AvatarUrl)))
                 return BadRequest("Au moins un champ doit être fourni.");
 
             var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;

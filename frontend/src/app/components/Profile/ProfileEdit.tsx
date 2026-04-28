@@ -12,14 +12,14 @@ export default function ProfileEdit() {
   const { updateMyProfile, error, loading } = useProfile();
   const [profile, setProfile] = useState<MyUserProfile | null>(null);
   // Etats pour les champs du formulaire
-  const [userName, setUserName] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
 
   useEffect(() => {
     const loadProfile = async () => {
       const profileData = await userService.getMyProfile();
       setProfile(profileData);
-      setUserName(profileData.userName);
+      setDisplayName(profileData.displayName);
       setAvatarUrl(profileData.avatarUrl || ""); // Assurez-vous que avatarUrl est une chaîne, même si elle est vide
     };
     loadProfile();
@@ -29,7 +29,7 @@ export default function ProfileEdit() {
     e.preventDefault();
     try {
       const updatedProfile = await updateMyProfile({
-        userName,
+        displayName,
         avatarUrl,
       });
       if (updatedProfile) {
@@ -54,11 +54,11 @@ export default function ProfileEdit() {
             <div className="flex flex-col justify-start items-start ml-6 text-left">
               <input
                 className="text-xl font-bold px-1 border border-gray-300 rounded mb-4 w-1/2"
-                id="username"
+                id="displayName"
                 type="text"
-                placeholder={profile?.userName}
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
+                placeholder={profile?.displayName}
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
               />
               <button
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-1/2 rounded"

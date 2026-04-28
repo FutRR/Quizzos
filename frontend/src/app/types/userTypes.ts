@@ -1,6 +1,7 @@
 export interface BaseUser {
     id?: string;
     userName: string;
+    displayName: string;
     createdAt: string;
     avatarUrl?: string;
 }
