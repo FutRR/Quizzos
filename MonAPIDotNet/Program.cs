@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MonAPIDotNet.Data;
+using MonAPIDotNet.Data.Seed;
 using MonAPIDotNet.Keys;
 using MonAPIDotNet.Middleware;
 using MonAPIDotNet.Service;
@@ -165,6 +166,10 @@ namespace MonAPIDotNet
 
             app.MapHub<MonAPIDotNet.Hubs.GameHub>("/gamehub");
             app.MapControllers();
+
+            // Seed initial data
+            var seedLogger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Seed");
+            ImpostorWordPairSeeder.SeedAsync(app.Services, seedLogger).GetAwaiter().GetResult();
 
             app.Run();
         }
