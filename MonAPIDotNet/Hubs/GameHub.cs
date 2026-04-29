@@ -43,6 +43,17 @@ namespace MonAPIDotNet.Hubs
                 }
 
                 await Groups.AddToGroupAsync(Context.ConnectionId, gameCode);
+
+                // Reload session to get an up-to-date players list (incl. the one we just added)
+                var refreshed = await _gameService.GetSessionByCodeAsync(gameCode);
+                var snapshot = refreshed?.Players
+                    .Select(p => new { id = p.Id, userId = p.UserId, role = (int)p.Role, isEliminated = p.IsEliminated, hasVoted = p.HasVoted })
+                    .ToList();
+
+                // Send full snapshot to the caller so it knows about already-present players
+                await Clients.Caller.SendAsync("PlayersSync", snapshot);
+
+                // Notify everyone (including the caller) that a new player joined
                 await Clients.Group(gameCode).SendAsync("PlayerJoined", new { userId, playerId = player.Id });
             }
             catch (Exception ex)
