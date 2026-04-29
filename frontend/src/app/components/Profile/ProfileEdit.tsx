@@ -15,6 +15,9 @@ export default function ProfileEdit() {
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
 
+  const [edit, setEdit] = useState(false);
+  const toggle = () => setEdit((prev) => !prev);
+
   useEffect(() => {
     const loadProfile = async () => {
       const profileData = await userService.getMyProfile();
