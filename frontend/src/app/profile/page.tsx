@@ -6,6 +6,7 @@ import ProfileStats from "../components/Profile/ProfileStats";
 import GetUserQuizzes from "../components/Quizz/GetUserQuizzes";
 import { useAuth } from "../hooks/useAuth";
 import { useState } from "react";
+import { AvatarViewer } from "../components/Three/Avatar";
 
 export default function Profile() {
   const { user, loading } = useAuth();
@@ -39,6 +40,9 @@ export default function Profile() {
         {!loading && user && (
           <GetUserQuizzes authorName={user.userName} limit={3} />
         )}
+      </div>
+      <div className="w-1/2">
+        <AvatarViewer className="w-full h-full" style={{ width: '100%', height: '100%' }} />
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { useJsonPlaceholder } from "@/app/hooks/useJsonPlaceholder";
 import { Temporal } from "@js-temporal/polyfill";
 import { useQuiz } from "@/app/hooks/useQuiz";
 
+
 export default function MyProfilePage() {
   const { user, loading } = useAuth();
   const router = useRouter();

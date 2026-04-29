@@ -365,3 +365,6 @@ FodyWeavers.xsd
 Keys/
 
 appsettings.Development.json
+
+# Documentation locale
+Docs/
