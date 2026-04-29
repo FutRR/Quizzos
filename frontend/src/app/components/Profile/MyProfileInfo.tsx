@@ -105,10 +105,7 @@ export default function MyProfilePage() {
           ) : (
             <form className="space-y-4 p-0 m-0" onSubmit={handleSubmit}>
               <div className="flex">
-                <AvatarUpload
-                  onImageUploaded={setAvatarUrl}
-                  currentImageUrl={profile?.avatarUrl || ""}
-                />
+                <AvatarUpload onImageUploaded={setAvatarUrl} />
                 <div className="ml-6 text-left">
                   <input
                     className="text-xl font-bold border border-gray-300 rounded"
@@ -120,7 +117,7 @@ export default function MyProfilePage() {
                   />
                   <p className="text-gray-600">@{profile.userName}</p>
                   <p>Abonnés: 12</p>
-                  <div>
+                  <div className="flex gap-2">
                     <button
                       className="bg-green-800 hover:bg-green-700 border border-green-900 text-white font-bold py-1 px-2 rounded"
                       type="submit"
