@@ -40,7 +40,8 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef, useMemo } from 'react'
+import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
 import {
   useGLTF,
@@ -48,6 +49,7 @@ import {
   OrbitControls,
   Environment,
 } from '@react-three/drei'
+import { SkeletonUtils } from 'three-stdlib'
 
 const MODEL_URL = '/AvatarQuizzos.glb'
 
@@ -60,12 +62,36 @@ const MODEL_URL = '/AvatarQuizzos.glb'
  *
  * Props :
  *   animation : string  — nom du clip d'animation à jouer
+ *   color     : string  — couleur du modèle (ex. '#ff6b6b')
  *   ...props            — passées au <primitive> (position, rotation, scale...)
  */
-export function AvatarModel({ animation = 'Waving', ...props }) {
+export function AvatarModel({ animation = 'Waving', color, ...props }) {
   const group = useRef()
   const { scene, animations } = useGLTF(MODEL_URL)
   const { actions } = useAnimations(animations, group)
+
+    // Clone la scène + matériaux pour que cette instance soit indépendante
+    const clonedScene = useMemo(() => {
+    const clone = SkeletonUtils.clone(scene)
+    clone.traverse((child) => {
+        if (child.isMesh && child.material) {
+        child.material = Array.isArray(child.material)
+            ? child.material.map((m) => m.clone())
+            : child.material.clone()
+        }
+    })
+    return clone
+    }, [scene])
+
+    // Applique la couleur dynamiquement
+  useEffect(() => {
+    if (!color) return
+    clonedScene.traverse((child) => {
+      if (child.isMesh && child.material && 'color' in child.material) {
+        child.material.color.set(color)
+      }
+    })
+  }, [color, clonedScene])
 
   useEffect(() => {
     const next = actions[animation]
@@ -88,7 +114,7 @@ export function AvatarModel({ animation = 'Waving', ...props }) {
     }
   }, [animation, actions])
 
-  return <primitive ref={group} object={scene} {...props} />
+  return <primitive ref={group} object={clonedScene} {...props} />
 }
 
 // Précharge le .glb dès que ce module est importé. La 1re instance du composant
@@ -107,8 +133,9 @@ useGLTF.preload(MODEL_URL)
  *   className, style    — pour styler le <div> conteneur
  */
 export function AvatarViewer({
-  animation = 'Waving',
-  controls = true,
+  animation = 'Defeated',
+  controls = false,
+  color,
   className,
   style,
 }) {
@@ -117,17 +144,17 @@ export function AvatarViewer({
       className={className}
       style={{ width: '100%', height: '100%', ...style }}
     >
-      <Canvas camera={{ position: [0, 1, 2.5], fov: 35 }} shadows>
+      <Canvas camera={{ position: [0, 1, 2.5], fov: 60 }} shadows>
         <ambientLight intensity={0.5} />
         <directionalLight
           position={[3, 5, 2]}
-          intensity={1.5}
+          intensity={1.6}
           castShadow
           shadow-mapSize={[1024, 1024]}
         />
 
         <Suspense fallback={null}>
-          <AvatarModel animation={animation} position={[0, -1, 0]} />
+          <AvatarModel animation={animation} color={color} position={[0, -1, 0]} />
           <Environment preset="city" />
         </Suspense>
 

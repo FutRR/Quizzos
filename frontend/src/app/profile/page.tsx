@@ -9,6 +9,10 @@ import { AvatarViewer } from "../components/Three/Avatar";
 
 export default function Profile() {
   const { user, loading } = useAuth();
+  const [animation, setAnimation] = useState<
+    "Waving" | "Defeated" | "Celebrate"
+  >("Defeated");
+  const [color, setColor] = useState("#000000");
 
   return (
     <div className="flex justify-between px-16 gap-8">
@@ -26,11 +30,25 @@ export default function Profile() {
           <GetUserQuizzes authorName={user.userName} limit={3} />
         )}
       </div>
-      <div className="w-1/2">
-        <AvatarViewer
-          className="w-full h-full"
-          style={{ width: "100%", height: "100%" }}
-        />
+      <div className="flex flex-col items-center">
+        <div className="w-126 h-126">
+          <AvatarViewer
+            animation={animation}
+            color={color}
+            className="w-full h-full"
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
+        <div className="flex gap-2">
+          <button onClick={() => setAnimation("Waving")}>Waving</button>
+          <button onClick={() => setAnimation("Defeated")}>Defeated</button>
+          <button onClick={() => setAnimation("Celebrate")}>Celebrate</button>
+          <input
+            type="color"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+          />
+        </div>
       </div>
     </div>
   );
