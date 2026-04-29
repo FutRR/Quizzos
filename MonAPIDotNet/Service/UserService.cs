@@ -31,6 +31,7 @@ namespace MonAPIDotNet.Service
                 .Select(u => new UserProfileDTO
                 {
                     UserName = u.UserName!,
+                    DisplayName = u.UserProfile!.DisplayName,
                     AvatarUrl = u.UserProfile!.AvatarUrl,
                     CreatedAt = u.UserProfile.CreatedAt
                 })
@@ -49,6 +50,7 @@ namespace MonAPIDotNet.Service
             return new UserProfileDTO
             {
                 UserName = user.UserName!,
+                DisplayName = user.UserProfile.DisplayName,
                 AvatarUrl = user.UserProfile.AvatarUrl,
                 CreatedAt = user.UserProfile.CreatedAt
             };
@@ -66,6 +68,7 @@ namespace MonAPIDotNet.Service
             return new UserProfileDTO
             {
                 UserName = user.UserName!,
+                DisplayName = user.UserProfile.DisplayName,
                 AvatarUrl = user.UserProfile.AvatarUrl,
                 CreatedAt = user.UserProfile.CreatedAt
             };
@@ -82,6 +85,7 @@ namespace MonAPIDotNet.Service
             return new PrivateUserProfileDTO
             {
                 UserName = user.UserName!,
+                DisplayName = user.UserProfile.DisplayName,
                 AvatarUrl = user.UserProfile.AvatarUrl,
                 CreatedAt = user.UserProfile.CreatedAt,
                 Email = user.Email,
@@ -101,8 +105,8 @@ namespace MonAPIDotNet.Service
                 throw new NotFoundException("User profile not found.", id);
 
             // Mise à jour uniquement des champs fournis
-            if (!string.IsNullOrEmpty(userDto.UserName))
-                user.UserName = userDto.UserName;
+            if (!string.IsNullOrEmpty(userDto.DisplayName))
+                user.UserProfile.DisplayName = userDto.DisplayName;
 
             if (!string.IsNullOrEmpty(userDto.AvatarUrl) && Uri.TryCreate(userDto.AvatarUrl, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
                 user.UserProfile.AvatarUrl = userDto.AvatarUrl;
@@ -110,7 +114,7 @@ namespace MonAPIDotNet.Service
             await _context.SaveChangesAsync();
             return new UpdateUserProfileDTO
             {
-                UserName = user.UserName!,
+                DisplayName = user.UserProfile.DisplayName,
                 AvatarUrl = user.UserProfile.AvatarUrl,
             };
         }

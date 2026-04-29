@@ -31,7 +31,7 @@ export default function UserProfile() {
       : "",
     imageAlt: images?.[0]?.title || "Avatar de l'utilisateur",
   };
-  console.log("Quizzes de l'auteur:", quizzes);
+
   return (
     <div>
       {profile ? (
@@ -43,7 +43,8 @@ export default function UserProfile() {
               className="w-32 h-32 rounded-full mb-4 object-cover"
             />
             <div className="ml-6 text-left">
-              <h3 className="text-xl font-bold">{profile.userName}</h3>
+              <h3 className="text-xl font-bold">{profile.displayName}</h3>
+              <p className="text-gray-600">@{profile.userName}</p>
               <p>Abonnés: 12</p>
             </div>
           </div>

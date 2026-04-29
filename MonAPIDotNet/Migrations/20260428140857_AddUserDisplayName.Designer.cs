@@ -12,8 +12,8 @@ using MonAPIDotNet.Data;
 namespace MonAPIDotNet.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20260409080335_SeedAuthorizedApp")]
-    partial class SeedAuthorizedApp
+    [Migration("20260428140857_AddUserDisplayName")]
+    partial class AddUserDisplayName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -273,6 +273,103 @@ namespace MonAPIDotNet.Migrations
                         });
                 });
 
+            modelBuilder.Entity("MonAPIDotNet.Data.ImpostorGameSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImpostorWord")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecretWord")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Winner")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImpostorGameSessions");
+                });
+
+            modelBuilder.Entity("MonAPIDotNet.Data.ImpostorPlayer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("EliminatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasVoted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEliminated")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("VotedForPlayerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ImpostorPlayers");
+                });
+
+            modelBuilder.Entity("MonAPIDotNet.Data.ImpostorWordPair", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WordA")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WordB")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImpostorWordPairs");
+                });
+
             modelBuilder.Entity("MonAPIDotNet.Data.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -496,6 +593,10 @@ namespace MonAPIDotNet.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("UserId");
 
                     b.ToTable("UserProfiles");
@@ -561,6 +662,25 @@ namespace MonAPIDotNet.Migrations
                         .IsRequired();
 
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("MonAPIDotNet.Data.ImpostorPlayer", b =>
+                {
+                    b.HasOne("MonAPIDotNet.Data.ImpostorGameSession", "Session")
+                        .WithMany("Players")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MonAPIDotNet.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Session");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MonAPIDotNet.Data.Question", b =>
@@ -648,6 +768,11 @@ namespace MonAPIDotNet.Migrations
             modelBuilder.Entity("MonAPIDotNet.Data.ApplicationUser", b =>
                 {
                     b.Navigation("UserProfile");
+                });
+
+            modelBuilder.Entity("MonAPIDotNet.Data.ImpostorGameSession", b =>
+                {
+                    b.Navigation("Players");
                 });
 
             modelBuilder.Entity("MonAPIDotNet.Data.Question", b =>
