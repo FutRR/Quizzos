@@ -1,0 +1,17 @@
+[
+  { "wordA": "Chat",       "wordB": "Tigre",        "category": "Animaux" },
+  { "wordA": "Café",        "wordB": "Thé",          "category": "Boissons" },
+  { "wordA": "Voiture",     "wordB": "Moto",         "category": "Transports" },
+  { "wordA": "Plage",       "wordB": "Piscine",      "category": "Lieux" },
+  { "wordA": "Pomme",       "wordB": "Poire",        "category": "Fruits" },
+  { "wordA": "Football",    "wordB": "Rugby",        "category": "Sports" },
+  { "wordA": "Pizza",       "wordB": "Quiche",       "category": "Cuisine" },
+  { "wordA": "Lune",        "wordB": "Soleil",       "category": "Astronomie" },
+  { "wordA": "Avion",       "wordB": "Hélicoptère",  "category": "Transports" },
+  { "wordA": "Médecin",     "wordB": "Infirmier",    "category": "Métiers" },
+  { "wordA": "Guitare",     "wordB": "Violon",       "category": "Musique" },
+  { "wordA": "Chien",       "wordB": "Loup",         "category": "Animaux" },
+  { "wordA": "Roi",         "wordB": "Empereur",     "category": "Titres" },
+  { "wordA": "Livre",       "wordB": "Magazine",     "category": "Lecture" },
+  { "wordA": "Montagne",    "wordB": "Colline",      "category": "Nature" }
+]
