@@ -50,12 +50,27 @@ export function useGameHub(): UseGameHubReturn {
       .configureLogging(signalR.LogLevel.Warning)
       .build();
 
-    connection.on("PlayerJoined", (data: { userId: string; playerId: number }) => {
-      console.log("Player joined:", data);
+    connection.on("PlayersSync", (players: Player[] | null) => {
+      console.log("Players sync:", players);
       setGameState((prev) => ({
         ...prev,
-        players: [...prev.players, { id: data.playerId, userId: data.userId, role: 0, isEliminated: false, hasVoted: false }],
+        players: players ?? [],
       }));
+    });
+
+    connection.on("PlayerJoined", (data: { userId: string; playerId: number }) => {
+      console.log("Player joined:", data);
+      setGameState((prev) => {
+        // Avoid duplicates (e.g. caller already received the player via PlayersSync)
+        if (prev.players.some((p) => p.id === data.playerId)) return prev;
+        return {
+          ...prev,
+          players: [
+            ...prev.players,
+            { id: data.playerId, userId: data.userId, role: 0, isEliminated: false, hasVoted: false },
+          ],
+        };
+      });
     });
 
     connection.on("GameStarted", (data: { sessionId: string; playerCount: number }) => {

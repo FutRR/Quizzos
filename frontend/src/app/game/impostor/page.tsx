@@ -131,7 +131,7 @@ export default function ImpostorGamePage() {
             sessionId={gameState.sessionId}
             players={hubState.players}
             currentUserId={gameState.currentUserId}
-            onGameStarted={() => {}} // Handled by hub state change
+            onStartGame={handleStartGame}
           />
         )}
 

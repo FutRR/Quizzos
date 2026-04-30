@@ -1,24 +1,22 @@
 "use client";
 
 import { Player } from "../../types/impostorGameTypes";
-import { startGame } from "../../services/impostorGameService";
 
 interface WaitingRoomProps {
   gameCode: string;
   sessionId: string;
   players: Player[];
   currentUserId: string;
-  onGameStarted: () => void;
+  onStartGame: () => Promise<void> | void;
 }
 
-export function WaitingRoom({ gameCode, sessionId, players, currentUserId, onGameStarted }: WaitingRoomProps) {
+export function WaitingRoom({ gameCode, sessionId, players, currentUserId, onStartGame }: WaitingRoomProps) {
   const canStart = players.length >= 3;
 
   const handleStart = async () => {
     if (!canStart) return;
     try {
-      await startGame(sessionId);
-      onGameStarted();
+      await onStartGame();
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to start game");
     }
