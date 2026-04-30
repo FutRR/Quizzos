@@ -95,6 +95,7 @@ namespace MonAPIDotNet.Controllers
                 Email = request.Email,
                 UserProfile = new UserProfile
                 {
+                    DisplayName = request.DisplayName,
                     CreatedAt = DateTime.UtcNow
                 }
             };
@@ -103,7 +104,7 @@ namespace MonAPIDotNet.Controllers
             {
                 return BadRequest(result.Errors);
             }
-            result = await _userManager.AddClaimsAsync(user, new[] { 
+            result = await _userManager.AddClaimsAsync(user, new[] {
                 new Claim(JwtRegisteredClaimNames.Name, request.DisplayName),
                 new Claim(JwtRegisteredClaimNames.Email, request.Email)
             });
@@ -111,14 +112,14 @@ namespace MonAPIDotNet.Controllers
             {
                 return BadRequest(result.Errors);
             }
-            
+
             // Générer un token et le retourner
             var userClaims = await _userManager.GetClaimsAsync(user);
             var token = _jwtService.GenerateJwtToken(user.Id, "API_App", userClaims.ToList());
             var refreshToken = _jwtService.GenerateRefreshToken();
-            
+
             await _jwtService.SaveRefreshToken(request.Username, refreshToken);
-            
+
             Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
             {
                 HttpOnly = true,
@@ -127,7 +128,7 @@ namespace MonAPIDotNet.Controllers
                 Expires = DateTime.UtcNow.AddDays(7),
                 Path = "/"
             });
-            
+
             return Ok(new { Token = token, RefreshToken = refreshToken });
         }
 
@@ -140,10 +141,10 @@ namespace MonAPIDotNet.Controllers
                 // Révoquer le token seulement s'il existe
                 await _jwtService.RevokeRefreshToken(refreshTokenValue);
             }
-            
+
             // Toujours supprimer le cookie
             Response.Cookies.Delete("refreshToken");
-            
+
             return Ok();
         }
     }

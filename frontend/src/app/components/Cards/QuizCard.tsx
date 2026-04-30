@@ -49,9 +49,9 @@ export default function QuizCard({ quizData }: QuizCardProps) {
               onClick={() =>
                 (window.location.href = "/profile/" + quiz.authorName)
               }
-              className="text-sm opacity-90"
+              className="text-sm opacity-90 hover:text-gray-400 cursor-pointer"
             >
-              By {quiz.authorName}
+              {quiz.authorName}
             </span>
           </div>
 
