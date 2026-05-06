@@ -35,6 +35,24 @@ namespace MonAPIDotNet.Controllers
             return Ok(quizzes);
         }
 
+        // GET /api/quiz/search
+
+        /// <summary>
+        /// Recherche des quiz par mot-clé, avec pagination.
+        /// </summary>
+        /// <param name="query">Le mot-clé de recherche.</param>
+        /// <param name="page">Le numéro de page (optionnel, par défaut à 1).</param>
+        /// <param name="pageSize">Le nombre de quiz par page (optionnel, par défaut à 20, maximum 100).</param>
+        /// <returns>La liste des quiz correspondant à la recherche, avec leurs questions, réponses, images et tags.</returns>
+        /// <response code="200">La liste des quiz correspondant à la recherche, avec leurs questions, réponses, images et tags.</response>
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(List<QuizDTO>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<QuizDTO>>> SearchQuizzesAsync(string query, int page = 1, int pageSize = 20)
+        {
+            var quizzes = await _quizService.SearchQuizzesAsync(query, page, pageSize);
+            return Ok(quizzes);
+        }
+
         // GET /api/quiz/{id}
 
         /// <summary>

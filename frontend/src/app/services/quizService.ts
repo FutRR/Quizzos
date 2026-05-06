@@ -16,6 +16,11 @@ export class QuizService {
         const response = await fetchClient.get(`/quiz/${authorName}/quizzes`);
         return response;
     }
+    // Search quizzes
+    async searchQuizzes(query: string, page: number = 1, pageSize: number = 12): Promise<any> {
+        const response = await fetchClient.get(`/quiz/search?query=${encodeURIComponent(query)}&page=${page}&pageSize=${pageSize}`);
+        return response;
+    }
     // Create quiz
     async createQuiz(data: any): Promise<any> {
         const response = await fetchClient.post("/quiz/new", data);

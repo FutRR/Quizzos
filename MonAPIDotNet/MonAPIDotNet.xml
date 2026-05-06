@@ -32,6 +32,16 @@
             <returns>La liste de tous les quiz avec leurs questions, réponses, images et tags.</returns>
             <response code="200">La liste de tous les quiz avec leurs questions, réponses, images et tags.</response>
         </member>
+        <member name="M:MonAPIDotNet.Controllers.QuizController.SearchQuizzesAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            Recherche des quiz par mot-clé, avec pagination.
+            </summary>
+            <param name="query">Le mot-clé de recherche.</param>
+            <param name="page">Le numéro de page (optionnel, par défaut à 1).</param>
+            <param name="pageSize">Le nombre de quiz par page (optionnel, par défaut à 20, maximum 100).</param>
+            <returns>La liste des quiz correspondant à la recherche, avec leurs questions, réponses, images et tags.</returns>
+            <response code="200">La liste des quiz correspondant à la recherche, avec leurs questions, réponses, images et tags.</response>
+        </member>
         <member name="M:MonAPIDotNet.Controllers.QuizController.GetQuizByIdAsync(System.Int32)">
             <summary>
             Récupère un quiz par son ID, avec ses questions, réponses, images et tags.

@@ -11,7 +11,7 @@ namespace MonAPIDotNet.Service
         Task<QuizDTO> CreateQuizAsync(CreateQuizDTO dto, string authorId);
         Task<QuizDTO> UpdateQuizAsync(int id, UpdateQuizDTO dto);
         Task DeleteQuizAsync(int id);
-
+        Task<List<QuizDTO>> SearchQuizzesAsync(string query, int page = 1, int pageSize = 20);
         Task<List<QuizDTO>> GetAllQuizzesAsync(int page = 1, int pageSize = 20);
         Task<QuizDTO> GetQuizByIdAsync(int id);
         Task<List<QuizDTO>> GetQuizzesByAuthorNameAsync(string authorName, int page = 1, int pageSize = 20);
@@ -138,6 +138,75 @@ namespace MonAPIDotNet.Service
                 CreatedAt = quiz.CreatedAt,
                 UpdatedAt = quiz.UpdatedAt
             };
+        }
+
+        public async Task<List<QuizDTO>> SearchQuizzesAsync(string query, int page = 1, int pageSize = 20)
+        {
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 20;
+            if (pageSize > 100) pageSize = 100;
+
+            // Si query vide, fallback sur GetAll
+            if (string.IsNullOrWhiteSpace(query))
+                return await GetAllQuizzesAsync(page, pageSize);
+
+            // SQL Server LIKE est insensible à la casse par défaut
+            var quizzes = await _context.Quizzes
+                .AsNoTracking()
+                .Where(q => 
+                    EF.Functions.Like(q.Title, $"%{query}%") || 
+                    (q.Description != null && EF.Functions.Like(q.Description, $"%{query}%")) ||
+                    q.QuizTags.Any(qt => EF.Functions.Like(qt.Tag.Name, $"%{query}%")))
+                .Include(q => q.Author)
+                .Include(q => q.Questions)
+                    .ThenInclude(q => q.Images)
+                .Include(q => q.Questions)
+                    .ThenInclude(q => q.Answers)
+                .Include(q => q.QuizTags)
+                    .ThenInclude(qt => qt.Tag)
+                .OrderBy(q => q.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return quizzes.Select(q => new QuizDTO
+            {
+                Id = q.Id,
+                Title = q.Title,
+                Description = q.Description ?? string.Empty,
+                Difficulty = q.Difficulty.ToString(),
+                ImageUrl = q.ImageUrl,
+                AuthorName = q.Author?.UserName ?? string.Empty,
+                Questions = q.Questions.Select(question => new QuestionDTO
+                {
+                    Id = question.Id,
+                    Text = question.Text,
+                    Type = question.Type.ToString(),
+                    IsTimed = question.IsTimed,
+                    TimeLimit = question.TimeLimit,
+                    CreatedAt = question.CreatedAt,
+                    UpdatedAt = question.UpdatedAt,
+                    QuizId = question.QuizId,
+                    ImagesUrls = question.Images.Select(qi => qi.Url).ToList(),
+                    Answers = question.Answers.Select(answer => new AnswerDTO
+                    {
+                        Id = answer.Id,
+                        Value = answer.Value,
+                        IsCorrect = answer.IsCorrect,
+                        QuestionId = answer.QuestionId
+                    }).ToList()
+                }).ToList(),
+                TagIds = q.QuizTags.Select(qt => qt.TagId).ToList(),
+                Tags = q.QuizTags.Select(qt => new TagDto
+                {
+                    Id = qt.Tag.Id,
+                    Name = qt.Tag.Name,
+                    Color = qt.Tag.Color
+                }).ToList(),
+                AuthorId = q.AuthorId,
+                CreatedAt = q.CreatedAt,
+                UpdatedAt = q.UpdatedAt
+            }).ToList();
         }
 
         public async Task<List<QuizDTO>> GetQuizzesByAuthorNameAsync(string authorName, int page = 1, int pageSize = 20)

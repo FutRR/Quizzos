@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { QuizService } from "../services/quizService";
 
 export function useQuiz() {
@@ -7,8 +7,10 @@ export function useQuiz() {
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const quizService = new QuizService();
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const getQuizzes = useCallback(async (p: number = 1, pageSize: number = 12) => {
     setLoading(true);
@@ -24,8 +26,45 @@ export function useQuiz() {
     }
   }, []);
 
+  const searchQuizzes = useCallback(async (query: string, p: number = 1, pageSize: number = 12) => {
+    if (!query.trim()) {
+      getQuizzes(p, pageSize);
+      return;
+    }
+    
+    setLoading(true);
+    setSearchQuery(query);
+    try {
+      const response = await quizService.searchQuizzes(query, p, pageSize);
+      setQuizzes(response);
+      setPage(p);
+      setHasMore(response.length >= pageSize);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
+  }, [getQuizzes]);
+
+  // Debounced search function
+  const debouncedSearch = useCallback((query: string, p: number = 1, pageSize: number = 12) => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    searchTimeoutRef.current = setTimeout(() => {
+      searchQuizzes(query, p, pageSize);
+    }, 300); // 300ms debounce
+  }, [searchQuizzes]);
+
   useEffect(() => {
     getQuizzes(1);
+    
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
   }, [getQuizzes]);
 
   // Add after getQuizzesByAuthorName (around line 71), before the return:
@@ -114,7 +153,10 @@ export function useQuiz() {
     error,
     page,
     hasMore,
+    searchQuery,
     getQuizzes,
+    searchQuizzes,
+    debouncedSearch,
     createQuiz,
     getQuizById,
     getQuizzesByAuthorName,
