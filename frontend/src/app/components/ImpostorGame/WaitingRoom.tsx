@@ -23,7 +23,7 @@ export function WaitingRoom({ gameCode, sessionId, players, currentUserId, onSta
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md text-gray-900">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold">Waiting Room</h2>
         <div className="mt-2 text-4xl font-mono font-bold text-blue-600 tracking-wider">

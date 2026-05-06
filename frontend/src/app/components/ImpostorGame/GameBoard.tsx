@@ -24,7 +24,7 @@ export function GameBoard({ gameCode, playerInfo, clues, players, currentUserId,
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6 text-gray-900">
       {/* Word Card */}
       <div className={`mb-6 p-6 rounded-lg text-center ${
         isImpostor 
@@ -78,7 +78,7 @@ export function GameBoard({ gameCode, playerInfo, clues, players, currentUserId,
             value={clue}
             onChange={(e) => setClue(e.target.value)}
             maxLength={100}
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
           />
           <button
             type="submit"

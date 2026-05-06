@@ -41,7 +41,7 @@ export function GameLobby({ onJoined }: GameLobbyProps) {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md text-gray-900">
       <h2 className="text-2xl font-bold mb-6 text-center">Impostor Game</h2>
       
       {error && (
@@ -75,7 +75,7 @@ export function GameLobby({ onJoined }: GameLobbyProps) {
             value={gameCode}
             onChange={(e) => setGameCode(e.target.value.toUpperCase())}
             maxLength={6}
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase"
+            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase text-gray-900 bg-white"
           />
           <button
             onClick={handleJoin}
