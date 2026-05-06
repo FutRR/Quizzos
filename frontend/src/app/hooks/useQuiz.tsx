@@ -1,6 +1,9 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { QuizService } from "../services/quizService";
 
+// Instance unique partagée (évite la recréation à chaque render)
+const quizService = new QuizService();
+
 export function useQuiz() {
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -9,16 +12,17 @@ export function useQuiz() {
   const [hasMore, setHasMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const quizService = new QuizService();
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const getQuizzes = useCallback(async (p: number = 1, pageSize: number = 12) => {
     setLoading(true);
+    setError(null);
     try {
       const response = await quizService.getQuizzes(p, pageSize);
       setQuizzes(response);
       setPage(p);
       setHasMore(response.length >= pageSize);
+      setSearchQuery("");
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -31,8 +35,9 @@ export function useQuiz() {
       getQuizzes(p, pageSize);
       return;
     }
-    
+
     setLoading(true);
+    setError(null);
     setSearchQuery(query);
     try {
       const response = await quizService.searchQuizzes(query, p, pageSize);
@@ -67,49 +72,12 @@ export function useQuiz() {
     };
   }, [getQuizzes]);
 
-  // Add after getQuizzesByAuthorName (around line 71), before the return:
-
-  const updateQuiz = useCallback(
-    async (id: string, data: any) => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await quizService.updateQuiz(id, data);
-        setQuizzes(quizzes.map((q) => (q.id === id ? response : q)));
-        return response;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-        throw err;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [quizzes],
-  );
-
-  const createQuiz = useCallback(
-    async (data: any) => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await quizService.createQuiz(data);
-        setQuizzes([...quizzes, response]);
-        return response;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-        throw err;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [quizzes],
-  );
-
-  const getQuizById = useCallback(async (id: string) => {
+  const updateQuiz = useCallback(async (id: string, data: any) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await quizService.getQuizById(id);
+      const response = await quizService.updateQuiz(id, data);
+      setQuizzes((prev) => prev.map((q) => (q.id === id ? response : q)));
       return response;
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -119,12 +87,39 @@ export function useQuiz() {
     }
   }, []);
 
-  const getQuizzesByAuthorName = useCallback(async (authorName: string) => {
+  const createQuiz = useCallback(async (data: any) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await quizService.getQuizzesByAuthorName(authorName);
+      const response = await quizService.createQuiz(data);
+      setQuizzes((prev) => [...prev, response]);
       return response;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getQuizById = useCallback(async (id: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      return await quizService.getQuizById(id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getQuizzesByAuthorName = useCallback(async (authorName: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      return await quizService.getQuizzesByAuthorName(authorName);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
       throw err;
@@ -138,7 +133,7 @@ export function useQuiz() {
       setLoading(true);
       setError(null);
       await quizService.deleteQuiz(id);
-      setQuizzes(quizzes.filter((q) => q.id !== id));
+      setQuizzes((prev) => prev.filter((q) => q.id !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
       throw err;
