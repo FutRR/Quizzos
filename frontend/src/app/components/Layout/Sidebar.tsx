@@ -77,6 +77,7 @@ const navItems: NavItem[] = [
     ),
     children: [
       { name: "Impostor", href: "/game/impostor" },
+      { name: "Geo Guess", href: "/game/geo-guess" },
     ],
   },
   {

@@ -34,6 +34,12 @@ namespace MonAPIDotNet
             builder.Services.AddSignalR();
             builder.Services.AddScoped<IImpostorGameService, ImpostorGameService>();
 
+            // GeoGame services
+            builder.Services.AddMemoryCache();
+            builder.Services.AddHttpClient<MapillaryService>();
+            builder.Services.AddScoped<GeoGameService>();
+
+            // Authentication & Authorization
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true; // Empêche l'accès JavaScript au cookie (protection XSS)

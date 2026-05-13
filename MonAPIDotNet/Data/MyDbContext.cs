@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MonAPIDotNet.Models;
 
 namespace MonAPIDotNet.Data
 {
@@ -20,6 +21,9 @@ namespace MonAPIDotNet.Data
         public DbSet<ImpostorGameSession> ImpostorGameSessions { get; set; }
         public DbSet<ImpostorPlayer> ImpostorPlayers { get; set; }
         public DbSet<ImpostorWordPair> ImpostorWordPairs { get; set; }
+        public DbSet<GeoGameSession> GeoGameSessions { get; set; }
+        public DbSet<GeoGameRound> GeoGameRounds { get; set; }
+        
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
 
         {

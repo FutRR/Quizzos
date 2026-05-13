@@ -131,7 +131,7 @@ class FetchClient {
           throw new Error(messages || `HTTP error! status: ${response.status}`);
         }
         throw new Error(
-          errorData.message || errorData.title || `HTTP error! status: ${response.status}`
+          errorData.error || errorData.message || errorData.title || `HTTP error! status: ${response.status}`
         );
       }
 

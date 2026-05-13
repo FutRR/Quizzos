@@ -214,5 +214,17 @@
         <member name="M:MonAPIDotNet.Migrations.AddUserDisplayName.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:MonAPIDotNet.Migrations.AddGeoGameSessions">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddGeoGameSessions.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddGeoGameSessions.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MonAPIDotNet.Migrations.AddGeoGameSessions.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
