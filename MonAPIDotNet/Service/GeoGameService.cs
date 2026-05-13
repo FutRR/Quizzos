@@ -10,6 +10,10 @@ public class GeoGameService
     private static readonly string[] ImagePool = new[]
     {
         "806967170244200",   // Tuileries, Paris
+        "3073251589649942", // Atheneum, Liège
+        "215254963455635", // Promenade des Bastions, Genève
+        "1068239820447414", // Parc ? , Moscou
+        "303781798431560" // Parc Hibaya, Tokyo
     };
 
     private readonly MapillaryService _mapillary;
